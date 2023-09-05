@@ -14,4 +14,5 @@ public interface InterfaceBaseService <M extends BaseModel, R extends JpaReposit
     public M update(UUID id, M model);
     public boolean deleteById(UUID id);
     public List<M> getAll();
+    public Page<M> getPage(int pageIndex, int pageSize);
 }

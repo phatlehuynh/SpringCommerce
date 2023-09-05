@@ -4,6 +4,8 @@ import com.example.demo.Model.Product;
 import com.example.demo.Response;
 import com.example.demo.Service.Implement.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +23,16 @@ public class ProductController {
     public ResponseEntity<?> getAll() {
         return Response.createResponse(HttpStatus.OK, "get all product successfully", productService.getAll());
     }
+
+    @GetMapping("/products/page")
+    public ResponseEntity<?> getPage(
+            @RequestParam(defaultValue = "0") int pageIndex,
+            @RequestParam(defaultValue = "10") int pageSize
+    ) {
+            Page<Product> productPage = productService.getPage(pageIndex, pageSize);
+            return Response.createResponse(HttpStatus.OK, "get page successfully", productPage.getContent());
+    }
+
 
     @GetMapping("/product/{id}")
     public ResponseEntity<?> getById(@PathVariable UUID id) {
