@@ -4,6 +4,7 @@ import com.example.demo.Model.BaseModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.NoRepositoryBean;
 
 import java.util.List;
 import java.util.UUID;

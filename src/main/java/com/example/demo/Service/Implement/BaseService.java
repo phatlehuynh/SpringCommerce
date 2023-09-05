@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
-@Service
+@NoRepositoryBean
 public class BaseService<M extends BaseModel, R extends JpaRepository<M, UUID>> implements InterfaceBaseService<M,R> {
 
     @Autowired
