@@ -13,6 +13,8 @@ import jakarta.persistence.*;
 //import javax.persistence.Entity;
 //import javax.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "product")
@@ -52,4 +54,7 @@ public class Product extends BaseModel{
 
     @Column(name = "content")
     private String content;
+
+    @ElementCollection
+    private List<String> links = new ArrayList<String>();
 }
