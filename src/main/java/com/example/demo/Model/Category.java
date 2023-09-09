@@ -1,5 +1,7 @@
 package com.example.demo.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
@@ -23,5 +25,7 @@ public class Category extends BaseModel {
     private UUID parentId;
 
     @ManyToMany(mappedBy = "categories")
+//    @JsonIgnore
+    @JsonBackReference
     private List<Product> products;
 }

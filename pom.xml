@@ -30,10 +30,18 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-<!--		<dependency>-->
+		<!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui -->
+
+		<!--		<dependency>-->
 <!--			<groupId>org.thymeleaf.extras</groupId>-->
 <!--			<artifactId>thymeleaf-extras-springsecurity6</artifactId>-->
 <!--		</dependency>-->
+		<!-- Phụ thuộc Swagger -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-boot-starter</artifactId>
+			<version>3.0.0</version> <!-- Phiên bản cụ thể của springfox -->
+		</dependency>
 
 		<dependency>
 			<groupId>com.mysql</groupId>
@@ -74,6 +82,12 @@
             <artifactId>spring-data-commons</artifactId>
             <version>3.1.2</version>
         </dependency>
+
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-ui</artifactId>
+			<version>1.6.15</version>
+		</dependency>
     </dependencies>
 
 	<build>
