@@ -4,17 +4,13 @@ import com.example.demo.Model.Category;
 import com.example.demo.Model.Product;
 import com.example.demo.Repository.CategoryRepository;
 import com.example.demo.Repository.ProductRepository;
-import com.example.demo.Service.Implement.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class ProductService extends BaseService<Product, ProductRepository> {
@@ -25,12 +21,18 @@ public class ProductService extends BaseService<Product, ProductRepository> {
         return repository.findByCategoriesId(categoryId, pageable);
     }
 
-    public Product addCategoryForProduct(UUID productId, UUID categoryId) {
-        Product product = repository.findById(productId).get();
-        Category category = categoryRepository.findById(categoryId).get();
-        List<Category> categories = product.getCategories();
-        categories.add(category);
-        product.setCategories(categories);
-        return repository.save(product);
+    public Product addCategoryForProduct(UUID productId, UUID categoryId) throws NoSuchElementException{
+        Optional<Product> product = repository.findById(productId);
+        if(product.isPresent()) {
+            Optional<Category> category = categoryRepository.findById(categoryId);
+            if (category.isPresent()) {
+                List<Category> categories = product.get().getCategories();
+                categories.add(category.get());
+                product.get().setCategories(categories);
+                return repository.save(product.get());
+            }
+            throw new NoSuchElementException("cannot found category id: " + categoryId.toString());
+        }
+        throw new NoSuchElementException("cannot found product id: " + productId.toString());
     }
 }

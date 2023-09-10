@@ -2,13 +2,12 @@ package com.example.demo.Controller;
 
 import com.example.demo.Model.Category;
 import com.example.demo.Model.Product;
-import com.example.demo.Repository.ProductRepository;
+import com.example.demo.Model.ProductCreationRequest;
 import com.example.demo.Response;
 import com.example.demo.Service.Implement.ProductService;
 import com.example.demo.utilities.PaginatedResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -55,9 +54,22 @@ public class ProductController {
     }
 
     @PostMapping("/product/insert")
-    public ResponseEntity<?> insert(@RequestBody Product product) {
-        productService.create(product);
-        return Response.createResponse(HttpStatus.OK, "insert product successfully", product);
+    public ResponseEntity<?> insert(@RequestBody ProductCreationRequest productCreationRequest) throws NoSuchElementException{
+        Product product = productCreationRequest.getProduct();
+        List<UUID> categoryIdList = productCreationRequest.getCategoryIdList();
+        Category categoryTemp = null;
+        Product productSaved =  productService.create(product);
+        if(categoryIdList != null){
+            for(UUID categoryId : categoryIdList){
+                try {
+                    productService.addCategoryForProduct(productSaved.getId(), categoryId);
+                } catch (NoSuchElementException e){
+                    return Response.createResponse(HttpStatus.OK, "add category for product failed", productSaved);
+                }
+            }
+        }
+
+        return Response.createResponse(HttpStatus.OK, "Insert product successfully", productService.findById(product.getId()));
     }
 
     @DeleteMapping("/product/delete/{id}")

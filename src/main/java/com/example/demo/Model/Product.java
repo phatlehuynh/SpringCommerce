@@ -1,18 +1,14 @@
 package com.example.demo.Model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "product")
@@ -62,8 +58,6 @@ public class Product extends BaseModel{
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
-//    @JsonIgnore
-    @Fetch(value = FetchMode.SELECT)
-    @JsonManagedReference
-    private List<Category> categories;
+    @JsonIgnoreProperties("products")
+    private List<Category> categories = new ArrayList<>();
 }
