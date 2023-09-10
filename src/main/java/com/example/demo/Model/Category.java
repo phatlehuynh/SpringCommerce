@@ -1,15 +1,12 @@
 package com.example.demo.Model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,8 +21,7 @@ public class Category extends BaseModel {
     @Column(name = "parentId")
     private UUID parentId;
 
-    @ManyToMany(mappedBy = "categories")
-//    @JsonIgnore
-    @JsonBackReference
-    private List<Product> products;
+    @ManyToMany(mappedBy = "categories", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("categories")
+    private List<Product> products = new ArrayList<>();
 }

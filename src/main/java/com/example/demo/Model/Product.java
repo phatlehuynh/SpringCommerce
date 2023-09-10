@@ -1,19 +1,11 @@
 package com.example.demo.Model;
 
-
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-//import javax.persistence.*;
 import jakarta.persistence.*;
 
-//import javax.persistence.Column;
-//import javax.persistence.Entity;
-//import javax.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,13 +23,13 @@ public class Product extends BaseModel{
     private String sumary;
 
     @Column(name = "sku")
-    private int sku;
+    private int sku; // shop keeping unit
 
     @Column(name = "discount")
     private double discount;
 
     @Column(name = "quantity")
-    private short quantity;
+    private short quantity;     // old new
 
     @Column(name = "shop")
     private byte shop;
@@ -49,10 +41,10 @@ public class Product extends BaseModel{
     private LocalDateTime updateAt;
 
     @Column(name = "startsAt")
-    private LocalDateTime startsAt;
+    private LocalDateTime startsAt; // Ngay mo quang cao
 
     @Column(name = "endsAt")
-    private LocalDateTime endsAt;
+    private LocalDateTime endsAt; //
 
     @Column(name = "content")
     private String content;
@@ -66,7 +58,6 @@ public class Product extends BaseModel{
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
-//    @JsonIgnore
-    @JsonManagedReference
-    private List<Category> categories;
+    @JsonIgnoreProperties("products")
+    private List<Category> categories = new ArrayList<>();
 }
