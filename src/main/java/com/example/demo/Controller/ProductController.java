@@ -5,6 +5,7 @@ import com.example.demo.Model.Product;
 import com.example.demo.Repository.ProductRepository;
 import com.example.demo.Response;
 import com.example.demo.Service.Implement.ProductService;
+import com.example.demo.utilities.PaginatedResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,10 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.UUID;
+import java.util.*;
 
 
 @RestController
@@ -30,11 +28,19 @@ public class ProductController {
 
     @GetMapping("/products/page")
     public ResponseEntity<?> getPage(
+            @RequestParam(required = false) UUID categoryId,
             @RequestParam(defaultValue = "0") int pageIndex,
             @RequestParam(defaultValue = "10") int pageSize
     ) {
-            Page<Product> productPage = productService.getPage(pageIndex, pageSize);
-            return Response.createResponse(HttpStatus.OK, "get page successfully", productPage.getContent());
+        Page<Product> products;
+        if(categoryId != null) {
+            products = productService.getByCategory(categoryId, pageIndex, pageSize);
+        }
+        else {
+            products = productService.getPage(pageIndex, pageSize);
+        }
+        PaginatedResponse<Product> paginatedResponse = new PaginatedResponse<>(products.getContent(), products.getTotalElements(), products.getTotalPages());
+        return Response.createResponse(HttpStatus.OK, "get products successfully", paginatedResponse);
     }
 
 
@@ -73,41 +79,34 @@ public class ProductController {
         }
     }
 
-    @PostMapping("/test")
-    public Product test() {
-        List<Category> categories = new ArrayList<>();
-        Category categoryA = new Category("category a", null, null);
-        categories.add(categoryA);
+    @GetMapping("/product/getbycategory/{categoryId}")
+    public ResponseEntity<?> getByCategory(
+            @PathVariable UUID categoryId,
+            @RequestParam(defaultValue = "0") int pageIndex,
+            @RequestParam(defaultValue = "10") int pageSize) {
+        Page<Product> products = productService.getByCategory(categoryId, pageIndex, pageSize);
+        PaginatedResponse<Product> paginatedResponse = new PaginatedResponse<>(products.getContent(), products.getTotalElements(), products.getTotalPages());
+        return Response.createResponse(HttpStatus.OK, "get products by category successfully", paginatedResponse);
+    }
+
+    @PutMapping("/product/{productId}/category/{categoryId}")
+    public ResponseEntity<?> addCategoryForProduct(@PathVariable UUID productId, @PathVariable UUID categoryId) {
+        return Response.createResponse(HttpStatus.OK, "ok", productService.addCategoryForProduct(productId, categoryId));
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<?> test(){
         Product productA = new Product();
-        productA.setTitle("prduct a");
-        productA.setCategories(categories);
-        return productService.create(productA);
+        productA.setTitle("product A");
+        Category categoryA = new Category();
+        categoryA.setTitle("category A");
+        List<Category> categorySet = new ArrayList<>();
+        categorySet.add(categoryA);
+        Category categoryB = new Category();
+        categoryA.setTitle("category B");
+        categorySet.add(categoryB);
+
+        productA.setCategories(categorySet);
+        return Response.createResponse(HttpStatus.OK, "ok", productService.create(productA));
     }
-
-    @GetMapping("/test2/{id}")
-    public List<Product> test2(@PathVariable UUID id) {
-        try {
-            Product product = productService.findById(id);
-            List<Product> productList = new ArrayList<>();
-            productList.add(product);
-            return productList;
-        } catch (NoSuchElementException e) {
-            // Xử lý ngoại lệ ở đây, ví dụ: in ra log và trả về danh sách rỗng hoặc null
-            e.printStackTrace();
-            return new ArrayList<>(); // Hoặc return null;
-        }
-    }
-
-    @GetMapping("/test3/{id}")
-    public  ResponseEntity<?> test3(@PathVariable UUID id) {
-        Product product = productService.findById(id);
-        return Response.createResponse(HttpStatus.OK, "ok", product.getCategories());
-    }
-
-
-
-
-
-
-
 }

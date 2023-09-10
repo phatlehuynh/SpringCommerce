@@ -1,22 +1,18 @@
 package com.example.demo.Model;
 
-
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-//import javax.persistence.*;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
-//import javax.persistence.Column;
-//import javax.persistence.Entity;
-//import javax.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "product")
@@ -31,13 +27,13 @@ public class Product extends BaseModel{
     private String sumary;
 
     @Column(name = "sku")
-    private int sku;
+    private int sku; // shop keeping unit
 
     @Column(name = "discount")
     private double discount;
 
     @Column(name = "quantity")
-    private short quantity;
+    private short quantity;     // old new
 
     @Column(name = "shop")
     private byte shop;
@@ -49,10 +45,10 @@ public class Product extends BaseModel{
     private LocalDateTime updateAt;
 
     @Column(name = "startsAt")
-    private LocalDateTime startsAt;
+    private LocalDateTime startsAt; // Ngay mo quang cao
 
     @Column(name = "endsAt")
-    private LocalDateTime endsAt;
+    private LocalDateTime endsAt; //
 
     @Column(name = "content")
     private String content;
@@ -67,6 +63,7 @@ public class Product extends BaseModel{
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
 //    @JsonIgnore
+    @Fetch(value = FetchMode.SELECT)
     @JsonManagedReference
     private List<Category> categories;
 }

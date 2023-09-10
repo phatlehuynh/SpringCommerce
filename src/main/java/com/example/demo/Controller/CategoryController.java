@@ -1,6 +1,7 @@
 package com.example.demo.Controller;
 
 import com.example.demo.Model.Category;
+import com.example.demo.Model.Product;
 import com.example.demo.Response;
 import com.example.demo.Service.Implement.CategoryService;
 import com.example.demo.Service.Implement.CategoryService;
@@ -25,6 +26,7 @@ public class CategoryController {
 
     @GetMapping("/categories/page")
     public ResponseEntity<?> getPage(
+            @RequestParam(required = false) UUID categoryId,
             @RequestParam(defaultValue = "0") int pageIndex,
             @RequestParam(defaultValue = "10") int pageSize
     ) {
@@ -67,4 +69,5 @@ public class CategoryController {
 
         }
     }
+
 }
