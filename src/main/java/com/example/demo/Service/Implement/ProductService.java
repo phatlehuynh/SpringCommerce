@@ -35,4 +35,9 @@ public class ProductService extends BaseService<Product, ProductRepository> {
         }
         throw new NoSuchElementException("cannot found product id: " + productId.toString());
     }
+
+    public Page<Product> search(String keyword, int pageIndex, int pageSize) {
+        Pageable pageable = PageRequest.of(pageIndex, pageSize);
+        return repository.search(keyword, pageable);
+    }
 }

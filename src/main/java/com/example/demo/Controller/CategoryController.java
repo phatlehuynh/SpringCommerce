@@ -5,6 +5,7 @@ import com.example.demo.Model.Product;
 import com.example.demo.Response;
 import com.example.demo.Service.Implement.CategoryService;
 import com.example.demo.Service.Implement.CategoryService;
+import com.example.demo.utilities.PaginatedResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -70,4 +71,21 @@ public class CategoryController {
         }
     }
 
+    @GetMapping("/category/getByParentId/{parentId}")
+    public ResponseEntity<?> getByParentId(
+            @PathVariable UUID parentId,
+            @RequestParam(defaultValue = "0") int pageIndex,
+            @RequestParam(defaultValue = "10") int pageSize
+    ) {
+        Page<Category> categoriePage = categoryService.getByParentId(parentId, pageIndex, pageSize);
+        PaginatedResponse<Category> paginatedResponse = new PaginatedResponse<>(
+                categoriePage.getContent(),
+                categoriePage.getTotalElements(),
+                categoriePage.getTotalPages()
+        );
+        return Response.createResponse(
+                HttpStatus.OK, "get category by parent id: " + parentId,
+                paginatedResponse
+        );
+    }
 }

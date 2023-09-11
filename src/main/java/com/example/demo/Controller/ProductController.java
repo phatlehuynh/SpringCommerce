@@ -28,14 +28,16 @@ public class ProductController {
     @GetMapping("/products/page")
     public ResponseEntity<?> getPage(
             @RequestParam(required = false) UUID categoryId,
+            @RequestParam(required = false) String keyword,
             @RequestParam(defaultValue = "0") int pageIndex,
             @RequestParam(defaultValue = "10") int pageSize
     ) {
         Page<Product> products;
         if(categoryId != null) {
             products = productService.getByCategory(categoryId, pageIndex, pageSize);
-        }
-        else {
+        } else if (keyword != null) {
+            products = productService.search(keyword, pageIndex, pageSize);
+        } else {
             products = productService.getPage(pageIndex, pageSize);
         }
         PaginatedResponse<Product> paginatedResponse = new PaginatedResponse<>(products.getContent(), products.getTotalElements(), products.getTotalPages());

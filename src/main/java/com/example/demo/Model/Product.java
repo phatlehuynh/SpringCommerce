@@ -1,6 +1,8 @@
 package com.example.demo.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,11 +24,14 @@ public class Product extends BaseModel{
     @Column(name = "sumary")
     private String sumary;
 
+    @Column(name = "content")
+    private String content;
+
+    @Column(name = "price")
+    private double price;
+
     @Column(name = "sku")
     private int sku; // shop keeping unit
-
-    @Column(name = "discount")
-    private double discount;
 
     @Column(name = "quantity")
     private short quantity;     // old new
@@ -40,14 +45,15 @@ public class Product extends BaseModel{
     @Column(name = "updateAt")
     private LocalDateTime updateAt;
 
+    @Column(name = "discount")
+    private double discount;
+
     @Column(name = "startsAt")
     private LocalDateTime startsAt; // Ngay mo quang cao
 
     @Column(name = "endsAt")
     private LocalDateTime endsAt; //
 
-    @Column(name = "content")
-    private String content;
 
     @ElementCollection
     private List<String> links = new ArrayList<String>();
