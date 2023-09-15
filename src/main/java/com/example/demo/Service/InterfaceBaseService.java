@@ -11,9 +11,9 @@ import java.util.UUID;
 
 public interface InterfaceBaseService <M extends BaseModel, R extends JpaRepository<M, UUID>> {
     public M create(M model);
-    public M findById(UUID id);
+    public M getById(UUID id);
     public M update(UUID id, M model);
-    public boolean deleteById(UUID id);
+    public void deleteById(UUID id);
     public List<M> getAll();
     public Page<M> getPage(int pageIndex, int pageSize);
 }

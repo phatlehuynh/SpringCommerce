@@ -18,7 +18,7 @@ public abstract class BaseModel implements Serializable {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
-    @Convert(converter = UUIDToStringConverter.class)
+//    @Convert(converter = UUIDToStringConverter.class)
     @Column(unique = true, updatable = true, nullable = false)
     private UUID id;
 

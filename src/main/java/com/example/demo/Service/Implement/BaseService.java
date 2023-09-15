@@ -28,7 +28,7 @@ public class BaseService<M extends BaseModel, R extends JpaRepository<M, UUID>> 
     }
 
     @Override
-    public M findById(UUID id) {
+    public M getById(UUID id) {
         Optional<M> model = repository.findById(id);
         if(model.isPresent()){
             return model.orElse(null);
@@ -48,13 +48,13 @@ public class BaseService<M extends BaseModel, R extends JpaRepository<M, UUID>> 
     }
 
     @Override
-    public boolean deleteById(UUID id) {
+    public void deleteById(UUID id) throws NoSuchElementException {
         Optional<M> model = repository.findById(id);
         if (model.isPresent()) {
             repository.deleteById(id);
-            return true;
+        } else {
+            throw new NoSuchElementException("Can't found productId: " + id + " to delete");
         }
-        return false;
     }
 
     @Override

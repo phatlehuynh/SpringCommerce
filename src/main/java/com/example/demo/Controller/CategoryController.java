@@ -39,7 +39,7 @@ public class CategoryController {
     @GetMapping("/category/{id}")
     public ResponseEntity<?> getById(@PathVariable UUID id) {
         try {
-            Category category = categoryService.findById(id);
+            Category category = categoryService.getById(id);
             return Response.createResponse(HttpStatus.OK, "get category by id successfully", category);
         } catch (NoSuchElementException e) {
             return Response.createResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
@@ -53,12 +53,16 @@ public class CategoryController {
     }
 
     @DeleteMapping("/category/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable UUID id) {
-        if(categoryService.deleteById(id)){
-            return Response.createResponse(HttpStatus.OK, "deleted category have id: " + id.toString(), null);
-        }
-        return Response.createResponse(HttpStatus.OK, "cannot found category have id: " + id.toString() + " to delete", null);
+    public ResponseEntity<?> delete(@PathVariable UUID id) throws NoSuchElementException {
+        try {
+            categoryService.deleteById(id);
+            return Response.createResponse(HttpStatus.OK,
+                    "deleted category have id: " + id.toString(),
+                    null);
 
+        } catch (NoSuchElementException e) {
+            return Response.createResponse(HttpStatus.OK, e.getMessage(), null);
+        }
     }
 
     @PutMapping("/category/update/{id}")

@@ -22,7 +22,9 @@ public class ProductController {
     ProductService productService;
     @GetMapping("/products")
     public ResponseEntity<?> getAll() {
-        return Response.createResponse(HttpStatus.OK, "get all product successfully", productService.getAll());
+        return Response.createResponse(HttpStatus.OK,
+                "get all product successfully",
+                productService.getAll());
     }
 
     @GetMapping("/products/page")
@@ -40,53 +42,75 @@ public class ProductController {
         } else {
             products = productService.getPage(pageIndex, pageSize);
         }
-        PaginatedResponse<Product> paginatedResponse = new PaginatedResponse<>(products.getContent(), products.getTotalElements(), products.getTotalPages());
+        PaginatedResponse<Product> paginatedResponse = new PaginatedResponse<>(
+                products.getContent(), products.getTotalElements(), products.getTotalPages()
+        );
         return Response.createResponse(HttpStatus.OK, "get products successfully", paginatedResponse);
     }
 
 
     @GetMapping("/product/{id}")
-    public ResponseEntity<?> getById(@PathVariable UUID id) {
+    public ResponseEntity<?> getById(@PathVariable UUID id) throws NoSuchElementException{
         try {
-            Product product = productService.findById(id);
-            return Response.createResponse(HttpStatus.OK, "get product by id successfully", product);
+            return Response.createResponse(HttpStatus.OK,
+                    "get product by id successfully",
+                    productService.getById(id));
         } catch (NoSuchElementException e) {
             return Response.createResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
         }
     }
 
     @PostMapping("/product/insert")
-    public ResponseEntity<?> insert(@RequestBody ProductCreationRequest productCreationRequest) throws NoSuchElementException{
-        Product product = productCreationRequest.getProduct();
-        List<UUID> categoryIdList = productCreationRequest.getCategoryIdList();
-        Category categoryTemp = null;
-        Product productSaved =  productService.create(product);
-        if(categoryIdList != null){
-            for(UUID categoryId : categoryIdList){
-                try {
-                    productService.addCategoryForProduct(productSaved.getId(), categoryId);
-                } catch (NoSuchElementException e){
-                    return Response.createResponse(HttpStatus.OK, "add category for product failed", productSaved);
-                }
-            }
+    public ResponseEntity<?> insert(
+            @RequestBody ProductCreationRequest productCreationRequest
+    ) throws NoSuchElementException {
+        try {
+            return Response.createResponse(
+                    HttpStatus.OK,
+                    "insert product successfully",
+                    productService.insert(productCreationRequest)
+            );
+        } catch (NoSuchElementException e) {
+            return Response.createResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
         }
-
-        return Response.createResponse(HttpStatus.OK, "Insert product successfully", productService.findById(product.getId()));
     }
 
     @DeleteMapping("/product/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable UUID id) {
-        if(productService.deleteById(id)){
-            return Response.createResponse(HttpStatus.OK, "deleted product have id: " + id.toString(), null);
+    public ResponseEntity<?> delete(@PathVariable UUID id) throws NoSuchElementException {
+        try {
+            productService.deleteById(id);
+            return Response.createResponse(HttpStatus.OK,
+                    "deleted product have id: " + id.toString(),
+                    null);
+
+        } catch (NoSuchElementException e) {
+            return Response.createResponse(HttpStatus.OK, e.getMessage(), null);
         }
-        return Response.createResponse(HttpStatus.OK, "cannot found product have id: " + id.toString() + " to delete", null);
 
     }
 
+
+    // update both product and category information
     @PutMapping("/product/update/{id}")
-    public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody Product newProduct) {
+    public ResponseEntity<?> update(
+            @PathVariable UUID id,
+            @RequestBody Product newProduct) {
         try {
             return Response.createResponse(HttpStatus.OK, "update product successfully", productService.update(id, newProduct));
+        } catch (NoSuchElementException e) {
+            return Response.createResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
+
+        }
+    }
+
+    // update product information
+    @PutMapping("/product/updateinfo/{id}")
+    public ResponseEntity<?> updateInfo(
+            @PathVariable UUID id,
+            @RequestBody ProductCreationRequest productCreationRequest
+    ) throws NoSuchElementException{
+        try {
+            return Response.createResponse(HttpStatus.OK, "update product successfully", productService.updateInfo(id, productCreationRequest));
         } catch (NoSuchElementException e) {
             return Response.createResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
 
@@ -104,23 +128,13 @@ public class ProductController {
     }
 
     @PutMapping("/product/{productId}/category/{categoryId}")
-    public ResponseEntity<?> addCategoryForProduct(@PathVariable UUID productId, @PathVariable UUID categoryId) {
-        return Response.createResponse(HttpStatus.OK, "ok", productService.addCategoryForProduct(productId, categoryId));
-    }
-
-    @GetMapping("/test")
-    public ResponseEntity<?> test(){
-        Product productA = new Product();
-        productA.setTitle("product A");
-        Category categoryA = new Category();
-        categoryA.setTitle("category A");
-        List<Category> categorySet = new ArrayList<>();
-        categorySet.add(categoryA);
-        Category categoryB = new Category();
-        categoryA.setTitle("category B");
-        categorySet.add(categoryB);
-
-        productA.setCategories(categorySet);
-        return Response.createResponse(HttpStatus.OK, "ok", productService.create(productA));
+    public ResponseEntity<?> addCategoryForProduct(
+            @PathVariable UUID productId,
+            @PathVariable UUID categoryId) {
+        try {
+            return Response.createResponse(HttpStatus.OK, "add category for product successfully", productService.addCategoryForProduct(productId, categoryId));
+        } catch (NoSuchElementException e) {
+            return Response.createResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
+        }
     }
 }

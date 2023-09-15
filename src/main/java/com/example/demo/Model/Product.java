@@ -5,13 +5,17 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "product")
 @AllArgsConstructor
@@ -54,9 +58,12 @@ public class Product extends BaseModel{
     @Column(name = "endsAt")
     private LocalDateTime endsAt; //
 
+    @Column(name = "link")
+    private String link;
+
 
     @ElementCollection
-    private List<String> links = new ArrayList<String>();
+    private List<String> linkImages = new ArrayList<String>();
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
@@ -64,6 +71,16 @@ public class Product extends BaseModel{
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
+
+
     @JsonIgnoreProperties("products")
-    private List<Category> categories = new ArrayList<>();
+//    @JsonManagedReference
+    @EqualsAndHashCode.Exclude
+    private Set<Category> categories = new HashSet<>();
+
+    public void addCategory(Category category) {
+        if(category != null) {
+            this.categories.add(category);
+        }
+    }
 }
