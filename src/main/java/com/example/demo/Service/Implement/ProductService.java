@@ -2,7 +2,7 @@ package com.example.demo.Service.Implement;
 
 import com.example.demo.Model.Category;
 import com.example.demo.Model.Product;
-import com.example.demo.Model.ProductCreationRequest;
+import com.example.demo.Utilities.ProductCreationRequest;
 import com.example.demo.Repository.CategoryRepository;
 import com.example.demo.Repository.ProductRepository;
 import com.example.demo.Service.InterfaceProductService;

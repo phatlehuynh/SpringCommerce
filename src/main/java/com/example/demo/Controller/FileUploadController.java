@@ -1,6 +1,6 @@
 package com.example.demo.Controller;
 
-import com.example.demo.Response;
+import com.example.demo.Utilities.Response;
 import com.example.demo.Service.IStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

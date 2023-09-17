@@ -1,5 +1,6 @@
-package com.example.demo.Model;
+package com.example.demo.Utilities;
 
+import com.example.demo.Model.Product;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

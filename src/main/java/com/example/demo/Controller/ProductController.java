@@ -1,11 +1,10 @@
 package com.example.demo.Controller;
 
-import com.example.demo.Model.Category;
 import com.example.demo.Model.Product;
-import com.example.demo.Model.ProductCreationRequest;
-import com.example.demo.Response;
+import com.example.demo.Utilities.ProductCreationRequest;
+import com.example.demo.Utilities.Response;
 import com.example.demo.Service.Implement.ProductService;
-import com.example.demo.utilities.PaginatedResponse;
+import com.example.demo.Utilities.PaginatedResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;

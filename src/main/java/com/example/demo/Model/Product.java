@@ -1,13 +1,12 @@
 package com.example.demo.Model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
+import org.apache.commons.lang3.builder.HashCodeExclude;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -74,13 +73,40 @@ public class Product extends BaseModel{
 
 
     @JsonIgnoreProperties("products")
-//    @JsonManagedReference
     @EqualsAndHashCode.Exclude
     private Set<Category> categories = new HashSet<>();
+
+    @ManyToMany(mappedBy = "products")
+//    @JsonIgnoreProperties("products")
+    @JsonIgnore
+    @EqualsAndHashCode.Exclude
+    private Set<Order> orders = new HashSet<>();
 
     public void addCategory(Category category) {
         if(category != null) {
             this.categories.add(category);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "title='" + title + '\'' +
+                ", sumary='" + sumary + '\'' +
+                ", content='" + content + '\'' +
+                ", price=" + price +
+                ", sku=" + sku +
+                ", quantity=" + quantity +
+                ", shop=" + shop +
+                ", createAt=" + createAt +
+                ", updateAt=" + updateAt +
+                ", discount=" + discount +
+                ", startsAt=" + startsAt +
+                ", endsAt=" + endsAt +
+                ", link='" + link + '\'' +
+                ", linkImages=" + linkImages +
+                ", categories=" + categories +
+                ", orders=" + orders +
+                '}';
     }
 }
