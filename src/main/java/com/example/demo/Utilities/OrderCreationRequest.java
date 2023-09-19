@@ -14,5 +14,5 @@ import java.util.UUID;
 @Data
 public class OrderCreationRequest {
     private Order order;
-    private List<UUID> productIdList;
+    private UUID userId;
 }

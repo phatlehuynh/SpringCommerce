@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
+import org.aspectj.weaver.ast.Or;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -37,8 +39,13 @@ public class User extends BaseModel {
     @JoinColumn(name = "cart_id")
     private Cart cart;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("user")
+    private Set<Order> orders;
+
     public User() {
         cart = new Cart();
+        orders = new HashSet<>();
     }
 
     public User(String userId) {
@@ -54,7 +61,7 @@ public class User extends BaseModel {
                 ", phone='" + phone + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-//                ", orders=" + orders +
+                ", orders=" + orders +
                 '}';
     }
 }

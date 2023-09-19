@@ -47,13 +47,13 @@ public class OrderController {
 
     @PostMapping("/order/insert")
     public ResponseEntity<?> insert(
-            @RequestBody OrderCreationRequest orderCreationRequest
+            @RequestBody Order order
     ) throws NoSuchElementException {
         try {
             return Response.createResponse(
                     HttpStatus.OK,
-                    "insert product successfully",
-                    orderService.insert(orderCreationRequest)
+                    "insert order successfully",
+                    orderService.insert(order)
             );
         } catch (NoSuchElementException e) {
             return Response.createResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
@@ -73,10 +73,10 @@ public class OrderController {
         }
     }
 
-    @PutMapping("/order/update/{id}")
-    public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody Order newOrder) {
+    @PutMapping("/order/updateStatus/{id}")
+    public ResponseEntity<?> update(@PathVariable UUID id, @RequestParam byte newStatus) {
         try {
-            return Response.createResponse(HttpStatus.OK, "update order successfully", orderService.update(id, newOrder));
+            return Response.createResponse(HttpStatus.OK, "update order status successfully", orderService.updateStatus(id, newStatus));
         } catch (NoSuchElementException e) {
             return Response.createResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
 

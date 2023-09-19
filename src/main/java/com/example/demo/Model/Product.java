@@ -76,11 +76,6 @@ public class Product extends BaseModel{
     @EqualsAndHashCode.Exclude
     private Set<Category> categories = new HashSet<>();
 
-    @ManyToMany(mappedBy = "products")
-//    @JsonIgnoreProperties("products")
-    @JsonIgnore
-    @EqualsAndHashCode.Exclude
-    private Set<Order> orders = new HashSet<>();
 
     public void addCategory(Category category) {
         if(category != null) {
@@ -106,7 +101,6 @@ public class Product extends BaseModel{
                 ", link='" + link + '\'' +
                 ", linkImages=" + linkImages +
                 ", categories=" + categories +
-                ", orders=" + orders +
                 '}';
     }
 }
