@@ -3,6 +3,7 @@ package com.example.demo.Controller;
 import com.example.demo.Model.Order;
 import com.example.demo.Model.User;
 import com.example.demo.Service.Implement.OrderService;
+import com.example.demo.Utilities.ProductCreationRequest;
 import com.example.demo.Utilities.Response;
 import com.example.demo.Service.Implement.UserService;
 import com.example.demo.Utilities.PaginatedResponse;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.UUID;
@@ -49,13 +51,26 @@ public class UserController {
         }
     }
 
-    @GetMapping("/user/getorders/{id}")
-    public ResponseEntity<?> getOrders(@PathVariable UUID id) throws NoSuchElementException {
+//    @PutMapping("/user/updateinfo/{id}")
+//    public ResponseEntity<?> updateInfo(
+//            @PathVariable UUID id,
+//            @RequestBody ProductCreationRequest productCreationRequest
+//    ) throws NoSuchElementException{
+//        try {
+//            return Response.createResponse(HttpStatus.OK, "update product successfully", userService.updateInfo(id, productCreationRequest));
+//        } catch (NoSuchElementException e) {
+//            return Response.createResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
+//
+//        }
+//    }
+
+
+    @PutMapping("/users/{userId}/cart/addproduct")
+    public ResponseEntity<?> addProductInCart(@PathVariable UUID userId, @RequestBody Map<UUID, Integer> productIntegerMap) {
         try {
-            Set<Order> orders = userService.getOrders(id);
-            return Response.createResponse(HttpStatus.OK, "get orders successfully", orders);
+            return Response.createResponse(HttpStatus.OK, "add product in user's cart successfully", userService.addProduct(userId, productIntegerMap));
         } catch (NoSuchElementException e) {
-            return Response.createResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
+            return Response.createResponse(HttpStatus.OK, e.getMessage(), null);
         }
     }
 
@@ -78,10 +93,10 @@ public class UserController {
         }
     }
 
-    @PutMapping("/user/update/{id}")
-    public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody User newUser) {
+    @PutMapping("/user/updateInfo/{id}")
+    public ResponseEntity<?> updateInfo(@PathVariable UUID id, @RequestBody User newUser) {
         try {
-            return Response.createResponse(HttpStatus.OK, "update user successfully", userService.update(id, newUser));
+            return Response.createResponse(HttpStatus.OK, "update user successfully", userService.updateInfo(id, newUser));
         } catch (NoSuchElementException e) {
             return Response.createResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
 

@@ -15,7 +15,6 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "user")
-@NoArgsConstructor
 @AllArgsConstructor
 @Data
 public class User extends BaseModel {
@@ -34,13 +33,13 @@ public class User extends BaseModel {
     @Column(name = "password", nullable = false)
     private String password;
 
-    // Add any other user-specific properties here
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cart_id")
+    private Cart cart;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    @JsonIgnoreProperties("user")
-//    @JsonIgnore
-    @EqualsAndHashCode.Exclude
-    private Set<Order> orders = new HashSet<>();
+    public User() {
+        cart = new Cart();
+    }
 
     public User(String userId) {
         // Chuyển đổi chuỗi UUID thành UUID và gán cho thuộc tính id
@@ -55,7 +54,7 @@ public class User extends BaseModel {
                 ", phone='" + phone + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", orders=" + orders +
+//                ", orders=" + orders +
                 '}';
     }
 }

@@ -32,7 +32,21 @@ public class Cart extends BaseModel {
     }
 
     public void addCartProduct(CartProduct cartProduct) {
-        cartProducts.add(cartProduct);
+        CartProduct cartProductExist = containProduct(cartProduct.getProduct());
+        if(cartProductExist != null) {
+            cartProductExist.setQuantity(cartProduct.getQuantity() + cartProduct.getQuantity());
+        } else {
+            cartProducts.add(cartProduct);
+        }
         totalAmount = calcTotal();
+    }
+
+    public CartProduct containProduct(Product product) {
+        for(CartProduct cartProduct : cartProducts) {
+            if(cartProduct.getProduct().getId().equals(product.getId())) {
+                return cartProduct;
+            }
+        }
+        return null;
     }
 }

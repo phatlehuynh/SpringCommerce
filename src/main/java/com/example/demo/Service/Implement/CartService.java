@@ -16,18 +16,6 @@ import java.util.*;
 public class CartService extends BaseService<Cart, CartRepository> {
     @Autowired
     ProductRepository productRepository;
-//    public Cart insert(CartCreationRequest cartCreationRequest) throws NoSuchElementException {
-//        Cart newCart = cartCreationRequest.getCart();
-//        System.out.println(newCart);
-//        Map<UUID, Integer> productIdQuantityList = cartCreationRequest.getProductIdQuantityList();
-//        for (Map.Entry<UUID, Integer> entry : productIdQuantityList.entrySet()) {
-//            UUID productId = entry.getKey();
-//            Integer quantity = entry.getValue();
-//            System.out.println("++++++++++++++++++++" + productId);
-//            System.out.println("++++++++++++++++++++" + quantity);
-//        }
-//        return repository.save(newCart);
-//    }}
     public Cart insert(CartCreationRequest cartCreationRequest) {
         // Tạo đối tượng Cart mới từ cartCreationRequest
         Cart newCart = cartCreationRequest.getCart();
