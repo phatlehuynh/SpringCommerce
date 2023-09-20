@@ -41,6 +41,7 @@ public class User extends BaseModel {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("user")
+    @EqualsAndHashCode.Exclude
     private Set<Order> orders;
 
     public User() {
