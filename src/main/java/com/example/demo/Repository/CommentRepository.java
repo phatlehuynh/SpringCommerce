@@ -1,0 +1,15 @@
+package com.example.demo.Repository;
+
+import com.example.demo.Model.Category;
+import com.example.demo.Model.Comment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.UUID;
+
+@Repository
+public interface CommentRepository extends JpaRepository<Comment, UUID> {
+    Page<Comment> findByProduct_Id(UUID productId, Pageable pageable);
+}

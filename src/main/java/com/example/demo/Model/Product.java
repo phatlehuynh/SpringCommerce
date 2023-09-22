@@ -103,4 +103,5 @@ public class Product extends BaseModel{
                 ", categories=" + categories +
                 '}';
     }
+
 }
