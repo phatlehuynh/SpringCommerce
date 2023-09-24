@@ -24,8 +24,8 @@ public class Product extends BaseModel{
     @Column(name = "title")
     private String title;
 
-    @Column(name = "sumary")
-    private String sumary;
+    @Column(name = "summary")
+    private String summary;
 
     @Column(name = "content")
     private String content;
@@ -51,11 +51,11 @@ public class Product extends BaseModel{
     @Column(name = "discount")
     private double discount;
 
-    @Column(name = "startsAt")
-    private LocalDateTime startsAt; // Ngay mo quang cao
+    @Column(name = "startAt")
+    private LocalDateTime startAt; // Ngay mo quang cao
 
-    @Column(name = "endsAt")
-    private LocalDateTime endsAt; //
+    @Column(name = "endAt")
+    private LocalDateTime endAt; //
 
     @Column(name = "link")
     private String link;
@@ -87,7 +87,7 @@ public class Product extends BaseModel{
     public String toString() {
         return "Product{" +
                 "title='" + title + '\'' +
-                ", sumary='" + sumary + '\'' +
+                ", sumary='" + summary + '\'' +
                 ", content='" + content + '\'' +
                 ", price=" + price +
                 ", sku=" + sku +
@@ -96,8 +96,8 @@ public class Product extends BaseModel{
                 ", createAt=" + createAt +
                 ", updateAt=" + updateAt +
                 ", discount=" + discount +
-                ", startsAt=" + startsAt +
-                ", endsAt=" + endsAt +
+                ", startsAt=" + startAt +
+                ", endsAt=" + endAt +
                 ", link='" + link + '\'' +
                 ", linkImages=" + linkImages +
                 ", categories=" + categories +
