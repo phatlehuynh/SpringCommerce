@@ -8,12 +8,15 @@ import com.example.demo.Repository.CommentRepository;
 import com.example.demo.Repository.ProductRepository;
 import com.example.demo.Repository.UserRepository;
 import com.example.demo.Service.InterfaceCommentService;
-import com.example.demo.Utilities.ProductCreationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.*;
 
@@ -61,11 +64,18 @@ public class CommentService extends BaseService<Comment, CommentRepository> impl
     }
 
     @Override
-    public Comment updateInfo(UUID commentId, String newStringComment) throws NoSuchElementException{
+    public Comment updateInfo(UUID commentId, String jsonStringNewComment) throws NoSuchElementException{
         Optional<Comment> commentOptional = repository.findById(commentId);
         if(commentOptional.isPresent()) {
             Comment comment = commentOptional.get();
-            comment.setCmt(newStringComment);
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+                JsonNode jsonNode = objectMapper.readTree(jsonStringNewComment);
+                String stringComment = jsonNode.get("newStringComment").asText();
+                comment.setCmt(stringComment);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return repository.save(comment);
         } else {
             throw new NoSuchElementException("commentId: " + commentId + " is not exits");
