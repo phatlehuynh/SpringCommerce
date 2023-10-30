@@ -1,10 +1,8 @@
 package com.example.demo.Controller;
 
 import com.example.demo.Model.Order;
-import com.example.demo.Utilities.OrderCreationRequest;
-import com.example.demo.Utilities.ProductCreationRequest;
-import com.example.demo.Utilities.Response;
 import com.example.demo.Service.Implement.OrderService;
+import com.example.demo.Utilities.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;

@@ -22,7 +22,7 @@ public class BaseService<M extends BaseModel, R extends JpaRepository<M, UUID>> 
     protected R repository;
 
     @Override
-    public M create(M model) {
+    public M insert(M model) {
         model.setId(null);
         return repository.save(model);
     }

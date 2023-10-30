@@ -21,45 +21,17 @@ import java.util.Set;
 @NoArgsConstructor
 @Data
 public class Product extends BaseModel{
-    @Column(name = "title")
-    private String title;
-
-    @Column(name = "summary")
-    private String summary;
-
-    @Column(name = "content")
-    private String content;
+    @Column(name = "name")
+    private String name;
 
     @Column(name = "price")
     private double price;
 
-    @Column(name = "sku")
-    private int sku; // shop keeping unit
+    @Column(name = "brand")
+    private String brand;
 
-    @Column(name = "quantity")
-    private short quantity;     // old new
-
-    @Column(name = "shop")
-    private byte shop;
-
-    @Column(name = "createAt")
-    private LocalDateTime createAt;
-
-    @Column(name = "updateAt")
-    private LocalDateTime updateAt;
-
-    @Column(name = "discount")
-    private double discount;
-
-    @Column(name = "startAt")
-    private LocalDateTime startAt; // Ngay mo quang cao
-
-    @Column(name = "endAt")
-    private LocalDateTime endAt; //
-
-    @Column(name = "link")
-    private String link;
-
+    @Column(name = "color")
+    private String color;
 
     @ElementCollection
     private List<String> linkImages = new ArrayList<String>();
@@ -76,32 +48,10 @@ public class Product extends BaseModel{
     @EqualsAndHashCode.Exclude
     private Set<Category> categories = new HashSet<>();
 
-
     public void addCategory(Category category) {
         if(category != null) {
             this.categories.add(category);
         }
-    }
-
-    @Override
-    public String toString() {
-        return "Product{" +
-                "title='" + title + '\'' +
-                ", sumary='" + summary + '\'' +
-                ", content='" + content + '\'' +
-                ", price=" + price +
-                ", sku=" + sku +
-                ", quantity=" + quantity +
-                ", shop=" + shop +
-                ", createAt=" + createAt +
-                ", updateAt=" + updateAt +
-                ", discount=" + discount +
-                ", startsAt=" + startAt +
-                ", endsAt=" + endAt +
-                ", link='" + link + '\'' +
-                ", linkImages=" + linkImages +
-                ", categories=" + categories +
-                '}';
     }
 
 }

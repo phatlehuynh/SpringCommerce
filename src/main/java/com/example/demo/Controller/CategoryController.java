@@ -1,6 +1,7 @@
 package com.example.demo.Controller;
 
 import com.example.demo.Model.Category;
+import com.example.demo.Service.InterfaceCategoryService;
 import com.example.demo.Utilities.Response;
 import com.example.demo.Service.Implement.CategoryService;
 import com.example.demo.Utilities.PaginatedResponse;
@@ -17,7 +18,7 @@ import java.util.UUID;
 @RequestMapping("/api")
 public class CategoryController {
     @Autowired
-    CategoryService categoryService;
+    InterfaceCategoryService categoryService;
     @GetMapping("/categories")
     public ResponseEntity<?> getAll() {
         return Response.createResponse(HttpStatus.OK, "get all category successfully", categoryService.getAll());
@@ -30,7 +31,7 @@ public class CategoryController {
             @RequestParam(defaultValue = "10") int pageSize
     ) {
         Page<Category> categoryPage = categoryService.getPage(pageIndex, pageSize);
-        return Response.createResponse(HttpStatus.OK, "get page successfully", categoryPage.getContent());
+        return Response.createResponse(HttpStatus.OK, "get page succes sfully", categoryPage.getContent());
     }
 
 
@@ -46,7 +47,7 @@ public class CategoryController {
 
     @PostMapping("/category/insert")
     public ResponseEntity<?> insert(@RequestBody Category category) {
-        categoryService.create(category);
+        categoryService.insert(category);
         return Response.createResponse(HttpStatus.OK, "insert category successfully", category);
     }
 

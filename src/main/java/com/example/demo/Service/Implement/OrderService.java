@@ -1,15 +1,19 @@
 package com.example.demo.Service.Implement;
 
-import com.example.demo.Model.*;
-import com.example.demo.Repository.*;
+import com.example.demo.Model.Cart;
+import com.example.demo.Model.Order;
+import com.example.demo.Model.User;
+import com.example.demo.Repository.CartRepository;
+import com.example.demo.Repository.OrderRepository;
+import com.example.demo.Repository.ProductRepository;
+import com.example.demo.Repository.UserRepository;
 import com.example.demo.Service.InterfaceOrderService;
-import com.example.demo.Utilities.OrderCreationRequest;
-import com.example.demo.Utilities.ProductCreationRequest;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class OrderService extends BaseService<Order, OrderRepository> implements InterfaceOrderService{
@@ -27,7 +31,7 @@ public class OrderService extends BaseService<Order, OrderRepository> implements
         } else {
             throw new NoSuchElementException("User have id: " + newOrder.getUser().getId() + " is not exists");
         }
-        Optional<Cart> cartOptional= cartRepository.findById(newOrder.getCart().getId());
+        Optional<Cart> cartOptional= cartRepository.findById(newOrder.getCartId());
         if(cartOptional.isPresent()) {
             newOrder.setCart(cartOptional.get());
         } else {

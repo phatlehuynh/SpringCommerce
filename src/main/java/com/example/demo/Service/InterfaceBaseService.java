@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface InterfaceBaseService <M extends BaseModel, R extends JpaRepository<M, UUID>> {
-    public M create(M model);
+    public M insert(M model);
     public M getById(UUID id);
     public M update(UUID id, M model);
     public void deleteById(UUID id);

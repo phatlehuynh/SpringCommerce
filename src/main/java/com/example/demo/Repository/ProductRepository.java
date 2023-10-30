@@ -14,6 +14,6 @@ import java.util.UUID;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, UUID> {
     public Page<Product> findByCategoriesId(UUID categoryId, Pageable pageable);
-    @Query("SELECT p from Product p WHERE p.title LIKE CONCAT('%', :keyword, '%')")
+    @Query("SELECT p from Product p WHERE p.name LIKE CONCAT('%', :keyword, '%')")
     public Page<Product> search(@Param("keyword") String keyword, Pageable pageable);
 }

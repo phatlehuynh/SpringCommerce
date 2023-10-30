@@ -1,14 +1,14 @@
 package com.example.demo.Model;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -27,25 +27,15 @@ public class Order extends BaseModel {
     @Column(name = "status")
     private byte status;
 
-    // Add any other order-specific properties here
-
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id",nullable = false, referencedColumnName = "id")
     @JsonIgnoreProperties({"cart", "orders"})
     private User user;
 
+    @Column(name = "cart_id")
+    private UUID cartId;
+
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cart_id")
+    @JoinColumn(name = "cart_id", insertable = false, updatable = false)
     private Cart cart;
-
-
-    @Override
-    public String toString() {
-        return "Order{" +
-                "orderDate=" + orderDate +
-                ", address='" + address + '\'' +
-                ", status=" + status +
-                ", user=" + user +
-                '}';
-    }
 }

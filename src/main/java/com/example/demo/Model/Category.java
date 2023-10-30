@@ -24,7 +24,6 @@ public class Category extends BaseModel {
 
     @ManyToMany(mappedBy = "categories", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("categories")
-//    @JsonBackReference
     @EqualsAndHashCode.Exclude
     private Set<Product> products = new HashSet<>();
 

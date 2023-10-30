@@ -1,21 +1,16 @@
 package com.example.demo.Controller;
 
-import com.example.demo.Model.Order;
 import com.example.demo.Model.User;
 import com.example.demo.Service.Implement.OrderService;
-import com.example.demo.Utilities.ProductCreationRequest;
-import com.example.demo.Utilities.Response;
 import com.example.demo.Service.Implement.UserService;
-import com.example.demo.Utilities.PaginatedResponse;
+import com.example.demo.Utilities.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Set;
 import java.util.UUID;
 
 @RestController
@@ -51,24 +46,31 @@ public class UserController {
         }
     }
 
-//    @PutMapping("/user/updateinfo/{id}")
-//    public ResponseEntity<?> updateInfo(
-//            @PathVariable UUID id,
-//            @RequestBody ProductCreationRequest productCreationRequest
-//    ) throws NoSuchElementException{
-//        try {
-//            return Response.createResponse(HttpStatus.OK, "update product successfully", userService.updateInfo(id, productCreationRequest));
-//        } catch (NoSuchElementException e) {
-//            return Response.createResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
-//
-//        }
-//    }
-
-
-    @PutMapping("/users/{userId}/cart/addproduct")
-    public ResponseEntity<?> addProductInCart(@PathVariable UUID userId, @RequestBody Map<UUID, Integer> productIntegerMap) {
+    @PutMapping("/users/addProductToCart")
+    public ResponseEntity<?> addProductToCart(@RequestParam UUID userId, @RequestParam UUID productId, @RequestParam int quantity) {
         try {
-            return Response.createResponse(HttpStatus.OK, "add product in user's cart successfully", userService.addProduct(userId, productIntegerMap));
+            boolean result = userService.addProduct(userId, productId, quantity);
+            if(!result) {
+                return Response.createResponse(HttpStatus.NOT_IMPLEMENTED, "quantity must > 0 for case add new product to cart", null);
+            }
+            return Response.createResponse(
+                    HttpStatus.OK,
+                    "add product in user's cart successfully",
+                    true
+            );
+        } catch (NoSuchElementException e) {
+            return Response.createResponse(HttpStatus.OK, e.getMessage(), null);
+        }
+    }
+
+    @PutMapping("/users/removeProductFromCart")
+    public ResponseEntity<?> removeProductFromCart(@RequestParam UUID userId, @RequestParam UUID productId) {
+        try {
+            return Response.createResponse(
+                    HttpStatus.OK,
+                    "remove product in user's cart successfully",
+                    userService.removeProduct(userId, productId)
+            );
         } catch (NoSuchElementException e) {
             return Response.createResponse(HttpStatus.OK, e.getMessage(), null);
         }
@@ -76,7 +78,7 @@ public class UserController {
 
     @PostMapping("/user/insert")
     public ResponseEntity<?> insert(@RequestBody User user) {
-        userService.create(user);
+        userService.insert(user);
         return Response.createResponse(HttpStatus.OK, "insert user successfully", user);
     }
 

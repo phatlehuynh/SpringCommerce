@@ -1,14 +1,11 @@
 package com.example.demo.Model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import jakarta.persistence.*;
-import org.aspectj.weaver.ast.Or;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -47,22 +44,5 @@ public class User extends BaseModel {
     public User() {
         cart = new Cart();
         orders = new HashSet<>();
-    }
-
-    public User(String userId) {
-        // Chuyển đổi chuỗi UUID thành UUID và gán cho thuộc tính id
-        this.id = UUID.fromString(userId);
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "username='" + username + '\'' +
-                ", nickname='" + nickname + '\'' +
-                ", phone='" + phone + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", orders=" + orders +
-                '}';
     }
 }

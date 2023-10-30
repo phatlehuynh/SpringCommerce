@@ -1,10 +1,8 @@
 package com.example.demo.Controller;
 
 import com.example.demo.Model.Cart;
-import com.example.demo.Utilities.CartCreationRequest;
-import com.example.demo.Utilities.Response;
 import com.example.demo.Service.Implement.CartService;
-import com.example.demo.Utilities.PaginatedResponse;
+import com.example.demo.Utilities.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -46,8 +44,21 @@ public class CartController {
     }
 
     @PostMapping("/cart/insert")
-    public ResponseEntity<?> insert(@RequestBody CartCreationRequest cartCreationRequest) {
-        return Response.createResponse(HttpStatus.OK, "insert cart successfully", cartService.insert(cartCreationRequest));
+    public ResponseEntity<?> insert(@RequestBody Cart newCart) {
+        return Response.createResponse(HttpStatus.OK, "insert cart successfully", cartService.insert(newCart));
+    }
+
+    @PutMapping("/cart/addProductToCart")
+    public ResponseEntity<?> addProductToCart(@RequestParam UUID cartId, @RequestParam UUID productId, @RequestParam int quantity) throws NoSuchElementException {
+        try {
+            boolean result = cartService.addProductToCart(cartId, productId, quantity);
+            if(!result) {
+                return Response.createResponse(HttpStatus.NOT_IMPLEMENTED, "quantity must > 0 for case add new product to cart", null);
+            }
+            return Response.createResponse(HttpStatus.OK, "insert cart successfully", result);
+        } catch (NoSuchElementException e) {
+            return Response.createResponse(HttpStatus.NOT_IMPLEMENTED, e.getMessage(), null);
+        }
     }
 
     @DeleteMapping("/cart/delete/{id}")
@@ -56,6 +67,19 @@ public class CartController {
             cartService.deleteById(id);
             return Response.createResponse(HttpStatus.OK,
                     "deleted cart have id: " + id.toString(),
+                    null);
+
+        } catch (NoSuchElementException e) {
+            return Response.createResponse(HttpStatus.OK, e.getMessage(), null);
+        }
+    }
+
+    @DeleteMapping("/cart/removeProductFromCart")
+    public ResponseEntity<?> removeProductFromCart(@RequestParam UUID cartId, @RequestParam UUID productId) throws NoSuchElementException {
+        try {
+            cartService.removeProductFromCart(cartId, productId);
+            return Response.createResponse(HttpStatus.OK,
+                    "deleted product have id: " + productId + " from cart have id: " + cartId,
                     null);
 
         } catch (NoSuchElementException e) {
@@ -72,5 +96,7 @@ public class CartController {
 
         }
     }
+
+
 
 }

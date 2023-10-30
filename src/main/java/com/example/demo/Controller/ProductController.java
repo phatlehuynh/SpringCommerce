@@ -1,9 +1,8 @@
 package com.example.demo.Controller;
 
 import com.example.demo.Model.Product;
-import com.example.demo.Utilities.ProductCreationRequest;
+import com.example.demo.Service.InterfaceProductService;
 import com.example.demo.Utilities.Response;
-import com.example.demo.Service.Implement.ProductService;
 import com.example.demo.Utilities.PaginatedResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,7 +17,7 @@ import java.util.*;
 @RequestMapping("/api")
 public class ProductController {
     @Autowired
-    ProductService productService;
+    InterfaceProductService productService;
     @GetMapping("/products")
     public ResponseEntity<?> getAll() {
         return Response.createResponse(HttpStatus.OK,
@@ -61,13 +60,13 @@ public class ProductController {
 
     @PostMapping("/product/insert")
     public ResponseEntity<?> insert(
-            @RequestBody ProductCreationRequest productCreationRequest
+            @RequestBody Product newProduct
     ) throws NoSuchElementException {
         try {
             return Response.createResponse(
                     HttpStatus.OK,
                     "insert product successfully",
-                    productService.insert(productCreationRequest)
+                    productService.insert(newProduct)
             );
         } catch (NoSuchElementException e) {
             return Response.createResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
@@ -88,28 +87,13 @@ public class ProductController {
 
     }
 
-
-    // update both product and category information
     @PutMapping("/product/update/{id}")
     public ResponseEntity<?> update(
             @PathVariable UUID id,
-            @RequestBody Product newProduct) {
-        try {
-            return Response.createResponse(HttpStatus.OK, "update product successfully", productService.update(id, newProduct));
-        } catch (NoSuchElementException e) {
-            return Response.createResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
-
-        }
-    }
-
-    // update product information
-    @PutMapping("/product/updateinfo/{id}")
-    public ResponseEntity<?> updateInfo(
-            @PathVariable UUID id,
-            @RequestBody ProductCreationRequest productCreationRequest
+            @RequestBody Product newProduct
     ) throws NoSuchElementException{
         try {
-            return Response.createResponse(HttpStatus.OK, "update product successfully", productService.updateInfo(id, productCreationRequest));
+            return Response.createResponse(HttpStatus.OK, "update product successfully", productService.update(id, newProduct));
         } catch (NoSuchElementException e) {
             return Response.createResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
 

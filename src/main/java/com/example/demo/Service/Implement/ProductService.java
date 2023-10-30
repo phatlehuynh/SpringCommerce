@@ -2,7 +2,6 @@ package com.example.demo.Service.Implement;
 
 import com.example.demo.Model.Category;
 import com.example.demo.Model.Product;
-import com.example.demo.Utilities.ProductCreationRequest;
 import com.example.demo.Repository.CategoryRepository;
 import com.example.demo.Repository.ProductRepository;
 import com.example.demo.Service.InterfaceProductService;
@@ -43,20 +42,19 @@ public class ProductService extends BaseService<Product, ProductRepository> impl
     }
 
     @Override
-    public Product updateInfo(UUID productId, ProductCreationRequest productCreationRequest) throws NoSuchElementException{
+    public Product update(UUID productId, Product newProduct) throws NoSuchElementException{
         Optional<Product> product = repository.findById(productId);
         if(product.isPresent()){
-            Product newProduct = productCreationRequest.getProduct();
             newProduct.setId(productId);
-            List<UUID> categories = productCreationRequest.getCategoryIdList();
+            Set<Category> categories = newProduct.getCategories();
             if(categories != null){
                 newProduct.setCategories(new HashSet<>());
-                for(UUID categoryId : categories) {
-                    Optional<Category> category = categoryRepository.findById(categoryId);
-                    if(category.isPresent()){
-                        newProduct.addCategory(category.get());
+                for(Category category : categories) {
+                    Optional<Category> categoryOptional = categoryRepository.findById(category.getId());
+                    if(categoryOptional.isPresent()){
+                        newProduct.addCategory(categoryOptional.get());
                     } else {
-                        throw new NoSuchElementException("categoryId: " + categoryId + " is not exists");
+                        throw new NoSuchElementException("categoryId: " + category.getId() + " is not exists");
                     }
                 }
             } else {
@@ -69,15 +67,15 @@ public class ProductService extends BaseService<Product, ProductRepository> impl
     }
 
     @Override
-    public Product insert(ProductCreationRequest productCreationRequest) throws NoSuchElementException {
-            Product newProduct = productCreationRequest.getProduct();
-            List<UUID> categories = productCreationRequest.getCategoryIdList();
+    public Product insert(Product newProduct) throws NoSuchElementException {
+            Set<Category> categories = newProduct.getCategories();
             if(categories != null){
                 newProduct.setCategories(new HashSet<>());
-                for(UUID categoryId : categories) {
-                    Optional<Category> category = categoryRepository.findById(categoryId);
-                    if(category.isPresent()){
-                        newProduct.addCategory(category.get());
+                for(Category category : categories) {
+                    UUID categoryId = category.getId();
+                    Optional<Category> categoryOptional = categoryRepository.findById(categoryId);
+                    if(categoryOptional.isPresent()){
+                        newProduct.addCategory(categoryOptional.get());
                     } else {
                         throw new NoSuchElementException("categoryId: " + categoryId + " is not exists");
                     }
