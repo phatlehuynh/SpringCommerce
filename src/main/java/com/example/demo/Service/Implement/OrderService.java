@@ -25,11 +25,11 @@ public class OrderService extends BaseService<Order, OrderRepository> implements
     UserRepository userRepository;
     @Override
     public Order insert(Order newOrder) throws NoSuchElementException {
-        Optional<User> userOptional= userRepository.findById(newOrder.getUser().getId());
+        Optional<User> userOptional= userRepository.findById(newOrder.getUserId());
         if(userOptional.isPresent()) {
             newOrder.setUser(userOptional.get());
         } else {
-            throw new NoSuchElementException("User have id: " + newOrder.getUser().getId() + " is not exists");
+            throw new NoSuchElementException("User have id: " + newOrder.getUserId() + " is not exists");
         }
         Optional<Cart> cartOptional= cartRepository.findById(newOrder.getCartId());
         if(cartOptional.isPresent()) {

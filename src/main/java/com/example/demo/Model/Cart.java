@@ -61,6 +61,6 @@ public class Cart extends BaseModel {
     }
 
     public void removeCartProduct(CartProduct cartProduct) {
-        System.out.println(        cartProducts.remove(cartProduct));
+        cartProducts.remove(cartProduct);
         totalAmount = calcTotal();
     }}

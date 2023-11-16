@@ -27,8 +27,11 @@ public class Order extends BaseModel {
     @Column(name = "status")
     private byte status;
 
+    @Column(name = "user_id")
+    private UUID userId;
+
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id",nullable = false, referencedColumnName = "id")
+    @JoinColumn(name = "user_id",nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
     @JsonIgnoreProperties({"cart", "orders"})
     private User user;
 

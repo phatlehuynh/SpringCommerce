@@ -1,6 +1,7 @@
 package com.example.demo.Model;
 
 import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.jsonschema.JsonSerializableSchema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -36,13 +37,12 @@ public class Product extends BaseModel{
     @ElementCollection
     private List<String> linkImages = new ArrayList<String>();
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
             name = "product_category",
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
-
 
     @JsonIgnoreProperties("products")
     @EqualsAndHashCode.Exclude
