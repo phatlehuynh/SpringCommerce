@@ -1,7 +1,9 @@
 package com.example.demo.Model;
 
+import com.example.demo.Utilities.Views;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,14 +19,18 @@ import java.util.*;
 @AllArgsConstructor
 @Data
 public class Category extends BaseModel {
+    @JsonView(Views.Public.class)
     @Column(name = "title")
     private String title;
+    @JsonView(Views.Public.class)
     @Column(name = "parentId")
     private UUID parentId;
 
-    @ManyToMany(mappedBy = "categories", cascade = CascadeType.ALL)
-    @JsonIgnoreProperties("categories")
+
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     @EqualsAndHashCode.Exclude
+//    @JsonView(Views.Public.class)
+    @JsonIgnoreProperties({"categoryId", "category", "price", "brand", "color", "linkImages"})
     private Set<Product> products = new HashSet<>();
 
 }

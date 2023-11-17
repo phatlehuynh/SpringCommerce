@@ -30,15 +30,15 @@ public class Order extends BaseModel {
     @Column(name = "user_id")
     private UUID userId;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id",nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "user_id", referencedColumnName = "id", insertable = false, updatable = false)
     @JsonIgnoreProperties({"cart", "orders"})
     private User user;
 
     @Column(name = "cart_id")
     private UUID cartId;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "cart_id", insertable = false, updatable = false)
     private Cart cart;
 }

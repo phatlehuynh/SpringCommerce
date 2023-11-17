@@ -1,6 +1,8 @@
 package com.example.demo.Model;
 
+import com.example.demo.Utilities.Views;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,11 +20,14 @@ import java.util.UUID;
 @Data
 @Table(name = "cart")
 public class Cart extends BaseModel {
+    @JsonView(Views.Public.class)
     @Column(name = "totalAmount")
     private double totalAmount;
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+
+    @OneToMany(mappedBy = "cart", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, orphanRemoval = true)
     @JsonIgnoreProperties("cart")
     @EqualsAndHashCode.Exclude
+    @JsonView(Views.Public.class)
     private Set<CartProduct> cartProducts;
 
     public Cart() {
@@ -60,7 +65,31 @@ public class Cart extends BaseModel {
         return null;
     }
 
+    public boolean containProduct(UUID productId) {
+        for(CartProduct cartProduct : cartProducts) {
+            if(cartProduct.getProduct().getId().equals(productId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void removeCartProduct(CartProduct cartProduct) {
         cartProducts.remove(cartProduct);
         totalAmount = calcTotal();
-    }}
+    }
+
+    public void addCartProduct(CartProduct cartProduct) {
+        cartProducts.add(cartProduct);
+        totalAmount = calcTotal();
+    }
+
+    @Override
+    public String toString() {
+        return "Cart{" +
+                ", id=" + id +
+                "totalAmount=" + totalAmount +
+                ", cartProducts=" + cartProducts +
+                '}';
+    }
+}

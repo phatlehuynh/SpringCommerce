@@ -1,7 +1,9 @@
 package com.example.demo.Service.Implement;
 
+import com.example.demo.Model.CartProduct;
 import com.example.demo.Model.Category;
 import com.example.demo.Model.Product;
+import com.example.demo.Repository.CartProductRepository;
 import com.example.demo.Repository.CategoryRepository;
 import com.example.demo.Repository.ProductRepository;
 import com.example.demo.Service.InterfaceProductService;
@@ -17,23 +19,11 @@ import java.util.*;
 public class ProductService extends BaseService<Product, ProductRepository> implements InterfaceProductService {
     @Autowired
     CategoryRepository categoryRepository;
-    public Page<Product> getByCategory(UUID categoryId, int pageIndex, int pageSize) {
+    @Autowired
+    CartProductRepository cartProductRepository;
+    public Page<Product> getByCategoryId(UUID categoryId, int pageIndex, int pageSize) {
         Pageable pageable = PageRequest.of(pageIndex, pageSize);
-        return repository.findByCategoriesId(categoryId, pageable);
-    }
-
-    public Product addCategoryForProduct(UUID productId, UUID categoryId) throws NoSuchElementException{
-        Optional<Product> product = repository.findById(productId);
-        if(product.isPresent()) {
-            Optional<Category> category = categoryRepository.findById(categoryId);
-            if (category.isPresent()) {
-                product.get().addCategory(category.get());
-                return repository.save(product.get());
-            }
-            throw new NoSuchElementException("cannot found category id: " + categoryId.toString());
-        } else {
-            throw new NoSuchElementException("cannot found product id: " + productId.toString());
-        }
+        return repository.findByCategoryId(categoryId, pageable);
     }
 
     public Page<Product> search(String keyword, int pageIndex, int pageSize) {
@@ -43,22 +33,16 @@ public class ProductService extends BaseService<Product, ProductRepository> impl
 
     @Override
     public Product update(UUID productId, Product newProduct) throws NoSuchElementException{
-        Optional<Product> product = repository.findById(productId);
-        if(product.isPresent()){
+        Optional<Product> productOptional = repository.findById(productId);
+        if(productOptional.isPresent()){
+            Product product = productOptional.get();
             newProduct.setId(productId);
-            Set<Category> categories = newProduct.getCategories();
-            if(categories != null){
-                newProduct.setCategories(new HashSet<>());
-                for(Category category : categories) {
-                    Optional<Category> categoryOptional = categoryRepository.findById(category.getId());
-                    if(categoryOptional.isPresent()){
-                        newProduct.addCategory(categoryOptional.get());
-                    } else {
-                        throw new NoSuchElementException("categoryId: " + category.getId() + " is not exists");
-                    }
+            Category category = newProduct.getCategory();
+            if(category == null){
+                Category oldCategory = product.getCategory();
+                if(oldCategory != null) {
+                    newProduct.setCategory(product.getCategory());
                 }
-            } else {
-                newProduct.setCategories(product.get().getCategories());
             }
             return repository.save(newProduct);
         } else {
@@ -68,17 +52,11 @@ public class ProductService extends BaseService<Product, ProductRepository> impl
 
     @Override
     public Product insert(Product newProduct) throws NoSuchElementException {
-            Set<Category> categories = newProduct.getCategories();
-            if(categories != null){
-                newProduct.setCategories(new HashSet<>());
-                for(Category category : categories) {
-                    UUID categoryId = category.getId();
-                    Optional<Category> categoryOptional = categoryRepository.findById(categoryId);
-                    if(categoryOptional.isPresent()){
-                        newProduct.addCategory(categoryOptional.get());
-                    } else {
-                        throw new NoSuchElementException("categoryId: " + categoryId + " is not exists");
-                    }
+            Category category = newProduct.getCategory();
+            if(category != null){
+                Optional<Category> categoryOptional = categoryRepository.findById(newProduct.getCategoryId());
+                if(categoryOptional.isEmpty()){
+                    throw new NoSuchElementException("categoryId: " + newProduct.getCategoryId() + " is not exists");
                 }
             }
             return repository.save(newProduct);
@@ -86,12 +64,24 @@ public class ProductService extends BaseService<Product, ProductRepository> impl
 
     @Override
     public void deleteById(UUID id) throws NoSuchElementException {
-        Optional <Product> product = repository.findById(id);
-        if(product.isPresent()) {
-            product.get().setCategories(new HashSet<>());
-            repository.deleteById(id);
+        Optional <Product> productOptional = repository.findById(id);
+        if(productOptional.isPresent()) {
+            Product product = productOptional.get();
+            Optional<CartProduct> cartProductOptional = cartProductRepository.findByProductId(id);
+            if(cartProductOptional.isPresent()) {
+                product.setDeleted(true);
+                repository.save(product);
+            } else {
+                repository.deleteById(id);
+            }
         } else {
             throw new NoSuchElementException("Can't found productId: " + id + " to delete");
         }
+    }
+
+    @Override
+    public Page<Product> getPage(int pageIndex, int pageSize) {
+        Pageable pageable = PageRequest.of(pageIndex, pageSize);
+        return repository.findAll(pageable);
     }
 }

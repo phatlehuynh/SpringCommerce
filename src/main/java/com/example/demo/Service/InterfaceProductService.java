@@ -13,9 +13,8 @@ public interface InterfaceProductService extends InterfaceBaseService<Product, P
 
     public Product insert(Product newProduct);
 
-    public Page<Product> getByCategory(UUID categoryId, int pageIndex, int pageSize);
+    public Page<Product> getByCategoryId(UUID categoryId, int pageIndex, int pageSize);
 
     public Page<Product> search(String keyword, int pageIndex, int pageSize);
 
-    public Product addCategoryForProduct(UUID productId, UUID categoryId);
 }

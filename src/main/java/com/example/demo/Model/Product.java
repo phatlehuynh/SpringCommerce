@@ -8,12 +8,10 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
 import org.apache.commons.lang3.builder.HashCodeExclude;
+import com.example.demo.Utilities.Views;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -22,36 +20,44 @@ import java.util.Set;
 @NoArgsConstructor
 @Data
 public class Product extends BaseModel{
+    @JsonView(Views.Public.class)
     @Column(name = "name")
     private String name;
 
+    @JsonView(Views.Public.class)
     @Column(name = "price")
     private double price;
 
+    @JsonView(Views.Public.class)
     @Column(name = "brand")
     private String brand;
 
+    @JsonView(Views.Public.class)
     @Column(name = "color")
     private String color;
 
+    @JsonView(Views.Public.class)
     @ElementCollection
     private List<String> linkImages = new ArrayList<String>();
 
-    @ManyToMany
-    @JoinTable(
-            name = "product_category",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id")
-    )
+    @Column(name = "category_id")
+    private UUID categoryId;
 
-    @JsonIgnoreProperties("products")
-    @EqualsAndHashCode.Exclude
-    private Set<Category> categories = new HashSet<>();
+    @JsonView(Views.HaveCategoty.class)
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "category_id",  referencedColumnName = "id", insertable = false, updatable = false)
+    @JsonIgnoreProperties({"products", "parentId"})
+    private Category category;
 
-    public void addCategory(Category category) {
-        if(category != null) {
-            this.categories.add(category);
-        }
+    @JsonView(Views.HaveCategoty.class)
+    @Column(name = "deleted")
+    private boolean deleted = false;
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id='" + id + '\'' +
+                "name='" + name + '\'' +
+                '}';
     }
-
 }

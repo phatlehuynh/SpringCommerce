@@ -1,10 +1,14 @@
 package com.example.demo.Controller;
 
 import com.example.demo.Model.Category;
+import com.example.demo.Model.Product;
 import com.example.demo.Service.InterfaceCategoryService;
 import com.example.demo.Utilities.Response;
 import com.example.demo.Service.Implement.CategoryService;
 import com.example.demo.Utilities.PaginatedResponse;
+import com.example.demo.Utilities.Views;
+import com.fasterxml.jackson.annotation.JsonView;
+import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -19,19 +23,25 @@ import java.util.UUID;
 public class CategoryController {
     @Autowired
     InterfaceCategoryService categoryService;
+
+    @JsonView(Views.Public.class)
     @GetMapping("/categories")
     public ResponseEntity<?> getAll() {
         return Response.createResponse(HttpStatus.OK, "get all category successfully", categoryService.getAll());
     }
 
+    @JsonView(Views.Public.class)
     @GetMapping("/categories/page")
     public ResponseEntity<?> getPage(
-            @RequestParam(required = false) UUID categoryId,
             @RequestParam(defaultValue = "0") int pageIndex,
             @RequestParam(defaultValue = "10") int pageSize
     ) {
         Page<Category> categoryPage = categoryService.getPage(pageIndex, pageSize);
-        return Response.createResponse(HttpStatus.OK, "get page succes sfully", categoryPage.getContent());
+        PaginatedResponse<Category> paginatedResponse = new PaginatedResponse<>(
+                categoryPage.getContent(), categoryPage.getTotalElements(), categoryPage.getTotalPages()
+        );
+        return Response.createResponse(HttpStatus.OK, "get products successfully", paginatedResponse);
+
     }
 
 
@@ -52,14 +62,14 @@ public class CategoryController {
     }
 
     @DeleteMapping("/category/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable UUID id) throws NoSuchElementException {
+    public ResponseEntity<?> delete(@PathVariable UUID id) throws NoSuchElementException, NotImplementedException {
         try {
             categoryService.deleteById(id);
             return Response.createResponse(HttpStatus.OK,
                     "deleted category have id: " + id.toString(),
                     null);
 
-        } catch (NoSuchElementException e) {
+        } catch (Exception e) {
             return Response.createResponse(HttpStatus.OK, e.getMessage(), null);
         }
     }

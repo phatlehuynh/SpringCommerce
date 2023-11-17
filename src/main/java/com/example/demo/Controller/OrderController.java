@@ -24,11 +24,20 @@ public class OrderController {
 
     @GetMapping("/orders/page")
     public ResponseEntity<?> getPage(
-            @RequestParam(required = false) UUID orderId,
             @RequestParam(defaultValue = "0") int pageIndex,
             @RequestParam(defaultValue = "10") int pageSize
     ) {
         Page<Order> orderPage = orderService.getPage(pageIndex, pageSize);
+        return Response.createResponse(HttpStatus.OK, "get page successfully", orderPage.getContent());
+    }
+
+    @GetMapping("/orders/getByUserId/{id}")
+    public ResponseEntity<?> getByUserId(
+            @RequestParam UUID userId,
+            @RequestParam(defaultValue = "0") int pageIndex,
+            @RequestParam(defaultValue = "10") int pageSize
+    ) {
+        Page<Order> orderPage = orderService.getByUserId(userId, pageIndex, pageSize);
         return Response.createResponse(HttpStatus.OK, "get page successfully", orderPage.getContent());
     }
 
@@ -58,18 +67,18 @@ public class OrderController {
         }
     }
 
-    @DeleteMapping("/order/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable UUID id) throws NoSuchElementException {
-        try {
-            orderService.deleteById(id);
-            return Response.createResponse(HttpStatus.OK,
-                    "deleted order have id: " + id.toString(),
-                    null);
-
-        } catch (NoSuchElementException e) {
-            return Response.createResponse(HttpStatus.OK, e.getMessage(), null);
-        }
-    }
+//    @DeleteMapping("/order/delete/{id}")
+//    public ResponseEntity<?> delete(@PathVariable UUID id) throws NoSuchElementException {
+//        try {
+//            orderService.deleteById(id);
+//            return Response.createResponse(HttpStatus.OK,
+//                    "deleted order have id: " + id.toString(),
+//                    null);
+//
+//        } catch (NoSuchElementException e) {
+//            return Response.createResponse(HttpStatus.OK, e.getMessage(), null);
+//        }
+//    }
 
     @PutMapping("/order/updateStatus/{id}")
     public ResponseEntity<?> update(@PathVariable UUID id, @RequestParam byte newStatus) {

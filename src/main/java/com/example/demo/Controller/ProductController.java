@@ -4,6 +4,8 @@ import com.example.demo.Model.Product;
 import com.example.demo.Service.InterfaceProductService;
 import com.example.demo.Utilities.Response;
 import com.example.demo.Utilities.PaginatedResponse;
+import com.example.demo.Utilities.Views;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,8 @@ import java.util.*;
 public class ProductController {
     @Autowired
     InterfaceProductService productService;
+
+    @JsonView(Views.HaveCategoty.class)
     @GetMapping("/products")
     public ResponseEntity<?> getAll() {
         return Response.createResponse(HttpStatus.OK,
@@ -25,6 +29,8 @@ public class ProductController {
                 productService.getAll());
     }
 
+
+    @JsonView(Views.Public.class)
     @GetMapping("/products/page")
     public ResponseEntity<?> getPage(
             @RequestParam(required = false) UUID categoryId,
@@ -34,7 +40,7 @@ public class ProductController {
     ) {
         Page<Product> products;
         if(categoryId != null) {
-            products = productService.getByCategory(categoryId, pageIndex, pageSize);
+            products = productService.getByCategoryId(categoryId, pageIndex, pageSize);
         } else if (keyword != null) {
             products = productService.search(keyword, pageIndex, pageSize);
         } else {
@@ -100,24 +106,4 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/product/getbycategory/{categoryId}")
-    public ResponseEntity<?> getByCategory(
-            @PathVariable UUID categoryId,
-            @RequestParam(defaultValue = "0") int pageIndex,
-            @RequestParam(defaultValue = "10") int pageSize) {
-        Page<Product> products = productService.getByCategory(categoryId, pageIndex, pageSize);
-        PaginatedResponse<Product> paginatedResponse = new PaginatedResponse<>(products.getContent(), products.getTotalElements(), products.getTotalPages());
-        return Response.createResponse(HttpStatus.OK, "get products by category successfully", paginatedResponse);
-    }
-
-    @PutMapping("/product/{productId}/category/{categoryId}")
-    public ResponseEntity<?> addCategoryForProduct(
-            @PathVariable UUID productId,
-            @PathVariable UUID categoryId) {
-        try {
-            return Response.createResponse(HttpStatus.OK, "add category for product successfully", productService.addCategoryForProduct(productId, categoryId));
-        } catch (NoSuchElementException e) {
-            return Response.createResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
-        }
-    }
 }

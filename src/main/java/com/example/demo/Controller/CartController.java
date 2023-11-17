@@ -2,13 +2,18 @@ package com.example.demo.Controller;
 
 import com.example.demo.Model.Cart;
 import com.example.demo.Service.Implement.CartService;
+import com.example.demo.Utilities.PaginatedResponse;
 import com.example.demo.Utilities.Response;
+import com.example.demo.Utilities.Views;
+import com.fasterxml.jackson.annotation.JsonView;
+import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
@@ -22,14 +27,18 @@ public class CartController {
         return Response.createResponse(HttpStatus.OK, "get all cart successfully", cartService.getAll());
     }
 
+    @JsonView(Views.Public.class)
     @GetMapping("/carts/page")
     public ResponseEntity<?> getPage(
-            @RequestParam(required = false) UUID cartId,
             @RequestParam(defaultValue = "0") int pageIndex,
             @RequestParam(defaultValue = "10") int pageSize
     ) {
         Page<Cart> cartPage = cartService.getPage(pageIndex, pageSize);
-        return Response.createResponse(HttpStatus.OK, "get page successfully", cartPage.getContent());
+        PaginatedResponse<Cart> paginatedResponse = new PaginatedResponse<>(
+                cartPage.getContent(), cartPage.getTotalElements(), cartPage.getTotalPages()
+        );
+        return Response.createResponse(HttpStatus.OK, "get products successfully", paginatedResponse);
+
     }
 
 
@@ -44,8 +53,19 @@ public class CartController {
     }
 
     @PostMapping("/cart/insert")
-    public ResponseEntity<?> insert(@RequestBody Cart newCart) {
-        return Response.createResponse(HttpStatus.OK, "insert cart successfully", cartService.insert(newCart));
+    public ResponseEntity<?> insert(@RequestBody (required = false) Map<UUID, Integer> productIdAndQuantityList) throws NoSuchElementException{
+        if(productIdAndQuantityList == null) {
+            try {
+                return Response.createResponse(HttpStatus.OK, "insert cart successfully", cartService.insert());
+            } catch (NoSuchElementException e) {
+                return Response.createResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
+            }
+        }
+        try {
+            return Response.createResponse(HttpStatus.OK, "insert cart successfully", cartService.insert(productIdAndQuantityList));
+        } catch (NoSuchElementException e) {
+            return Response.createResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
+        }
     }
 
     @PutMapping("/cart/addProductToCart")
@@ -62,15 +82,15 @@ public class CartController {
     }
 
     @DeleteMapping("/cart/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable UUID id) throws NoSuchElementException {
+    public ResponseEntity<?> delete(@PathVariable UUID id) throws NoSuchElementException, NotImplementedException {
         try {
             cartService.deleteById(id);
             return Response.createResponse(HttpStatus.OK,
                     "deleted cart have id: " + id.toString(),
                     null);
 
-        } catch (NoSuchElementException e) {
-            return Response.createResponse(HttpStatus.OK, e.getMessage(), null);
+        } catch (Exception e) {
+            return Response.createResponse(HttpStatus.NOT_IMPLEMENTED, e.getMessage(), null);
         }
     }
 

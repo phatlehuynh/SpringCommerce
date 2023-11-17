@@ -4,9 +4,11 @@ import com.example.demo.Model.Cart;
 import com.example.demo.Model.CartProduct;
 import com.example.demo.Model.Product;
 import com.example.demo.Model.User;
+import com.example.demo.Repository.CartRepository;
 import com.example.demo.Repository.ProductRepository;
 import com.example.demo.Repository.UserRepository;
 import com.example.demo.Service.InterfaceUserService;
+import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,8 @@ public class UserService extends BaseService<User, UserRepository> implements In
     ProductRepository productRepository;
     @Autowired
     CartService cartService;
+    @Autowired
+    CartRepository cartRepository;
     @Override
     public boolean addProduct(UUID userId, UUID productId, int quantity) throws NoSuchElementException {
         Optional<User> userOptional = repository.findById(userId);
@@ -61,4 +65,22 @@ public class UserService extends BaseService<User, UserRepository> implements In
         throw new NoSuchElementException("userId: " + id + "is not exist");
     }
 
+    @Override
+    public User insert(User newUser) throws NotImplementedException, NoSuchElementException {
+        Optional<User> userOptional = repository.findByUsername(newUser.getUsername());
+        if(userOptional.isPresent()) {
+            throw new NotImplementedException("username was exits");
+        }
+        newUser.setId(null);
+        if(newUser.getCartId() == null) {
+            Cart cart = cartService.insert();
+            newUser.setCartId(cart.getId());
+        } else {
+            Optional<Cart> cartOptional = cartRepository.findById(newUser.getCartId());
+            if(cartOptional.isEmpty()) {
+                throw new NoSuchElementException("Cannot find cart have id: " + newUser.getCartId());
+            }
+        }
+        return repository.save(newUser);
+    }
 }

@@ -4,6 +4,7 @@ import com.example.demo.Model.User;
 import com.example.demo.Service.Implement.OrderService;
 import com.example.demo.Service.Implement.UserService;
 import com.example.demo.Utilities.Response;
+import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -27,7 +28,6 @@ public class UserController {
 
     @GetMapping("/users/page")
     public ResponseEntity<?> getPage(
-            @RequestParam(required = false) UUID userId,
             @RequestParam(defaultValue = "0") int pageIndex,
             @RequestParam(defaultValue = "10") int pageSize
     ) {
@@ -77,9 +77,12 @@ public class UserController {
     }
 
     @PostMapping("/user/insert")
-    public ResponseEntity<?> insert(@RequestBody User user) {
-        userService.insert(user);
-        return Response.createResponse(HttpStatus.OK, "insert user successfully", user);
+    public ResponseEntity<?> insert(@RequestBody User user) throws NotImplementedException, NoSuchElementException {
+        try {
+            return Response.createResponse(HttpStatus.OK, "insert user successfully", userService.insert(user));
+        } catch (Exception e) {
+            return Response.createResponse(HttpStatus.NOT_IMPLEMENTED, e.getMessage(), null);
+        }
     }
 
     @DeleteMapping("/user/delete/{id}")
