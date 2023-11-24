@@ -1,8 +1,10 @@
 package com.example.demo.Controller;
 
 import com.example.demo.Model.User;
+import com.example.demo.Service.Implement.AuthenticationService;
 import com.example.demo.Service.Implement.OrderService;
 import com.example.demo.Service.Implement.UserService;
+import com.example.demo.Utilities.RegisterRequest;
 import com.example.demo.Utilities.Response;
 import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,8 @@ public class UserController {
     UserService userService;
     @Autowired
     OrderService orderService;
+    @Autowired
+    AuthenticationService authenticationService;
     @GetMapping("/users")
     public ResponseEntity<?> getAll() {
         return Response.createResponse(HttpStatus.OK, "get all user successfully", userService.getAll());
@@ -80,6 +84,15 @@ public class UserController {
     public ResponseEntity<?> insert(@RequestBody User user) throws NotImplementedException, NoSuchElementException {
         try {
             return Response.createResponse(HttpStatus.OK, "insert user successfully", userService.insert(user));
+        } catch (Exception e) {
+            return Response.createResponse(HttpStatus.NOT_IMPLEMENTED, e.getMessage(), null);
+        }
+    }
+
+    @PostMapping("/user/register")
+    public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) throws NotImplementedException, NoSuchElementException {
+        try {
+            return Response.createResponse(HttpStatus.OK, "insert user successfully", authenticationService.register(registerRequest));
         } catch (Exception e) {
             return Response.createResponse(HttpStatus.NOT_IMPLEMENTED, e.getMessage(), null);
         }

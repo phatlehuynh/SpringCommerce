@@ -23,9 +23,15 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
+                                .requestMatchers("/api/login")
+                                .permitAll()
+                                .requestMatchers("/api/user/insert")
+                                .permitAll()
+                                .requestMatchers("/api/user/register")
+                                .permitAll()
                                 .requestMatchers("/api/products/**")
-                                .hasRole("ADMIN")
-//                                .permitAll()
+//                                .hasRole("ADMIN")
+                                .permitAll()
                                 .requestMatchers("/api/products/insert")
                                 .hasRole("ADMIN")
 //                                .requestMatchers("/api/products/delete/**")
