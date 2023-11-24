@@ -3,9 +3,11 @@ package com.example.demo.Service.Implement;
 import com.example.demo.Model.CartProduct;
 import com.example.demo.Model.Category;
 import com.example.demo.Model.Product;
+import com.example.demo.Model.User;
 import com.example.demo.Repository.CartProductRepository;
 import com.example.demo.Repository.CategoryRepository;
 import com.example.demo.Repository.ProductRepository;
+import com.example.demo.Repository.UserRepository;
 import com.example.demo.Service.InterfaceProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,14 +23,26 @@ public class ProductService extends BaseService<Product, ProductRepository> impl
     CategoryRepository categoryRepository;
     @Autowired
     CartProductRepository cartProductRepository;
+    @Autowired
+    UserRepository userRepository;
     public Page<Product> getByCategoryId(UUID categoryId, int pageIndex, int pageSize) {
         Pageable pageable = PageRequest.of(pageIndex, pageSize);
         return repository.findByCategoryId(categoryId, pageable);
     }
 
+    @Override
+    public Page<Product> getByUserId(UUID userId, int pageIndex, int pageSize) {
+        Pageable pageable = PageRequest.of(pageIndex, pageSize);
+        return repository.findByUserId(userId, pageable);    }
+
     public Page<Product> search(String keyword, int pageIndex, int pageSize) {
         Pageable pageable = PageRequest.of(pageIndex, pageSize);
         return repository.search(keyword, pageable);
+    }
+
+    public Page<Product> filter(UUID categoryId, String keyword, String brand, String color, int pageIndex, int pageSize) {
+        Pageable pageable = PageRequest.of(pageIndex, pageSize);
+        return repository.filter(categoryId, keyword, brand, color, pageable);
     }
 
     @Override
@@ -51,15 +65,21 @@ public class ProductService extends BaseService<Product, ProductRepository> impl
     }
 
     @Override
-    public Product insert(Product newProduct) throws NoSuchElementException {
-            Category category = newProduct.getCategory();
-            if(category != null){
-                Optional<Category> categoryOptional = categoryRepository.findById(newProduct.getCategoryId());
-                if(categoryOptional.isEmpty()){
-                    throw new NoSuchElementException("categoryId: " + newProduct.getCategoryId() + " is not exists");
-                }
+    public String insertProduct(Product newProduct) throws NoSuchElementException {
+        if(newProduct.getCategoryId() != null) {
+            Optional<Category> categoryOptional = categoryRepository.findById(newProduct.getCategoryId());
+            if(categoryOptional.isEmpty()){
+                throw new NoSuchElementException("categoryId: " + newProduct.getCategoryId() + " is not exists");
             }
-            return repository.save(newProduct);
+        }
+        if(newProduct.getUserId() != null) {
+            Optional<User> userOptional = userRepository.findById(newProduct.getUserId());
+            if(userOptional.isEmpty()){
+                throw new NoSuchElementException("userId: " + newProduct.getCategoryId() + " is not exists");
+            }
+        }
+        Product product = repository.save(newProduct);
+        return product.getId().toString();
     }
 
     @Override

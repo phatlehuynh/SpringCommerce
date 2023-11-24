@@ -14,9 +14,24 @@ import java.util.UUID;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, UUID> {
     public Page<Product> findByCategoryId(UUID categoryId, Pageable pageable);
-    @Query("SELECT p from Product p WHERE p.name LIKE CONCAT('%', :keyword, '%')")
+    public Page<Product> findByUserId(UUID userId, Pageable pageable);
+    @Query("SELECT p from Product p WHERE p.name LIKE CONCAT('%', LOWER(:keyword), '%')")
     public Page<Product> search(@Param("keyword") String keyword, Pageable pageable);
-
     @Query("SELECT p from Product p WHERE p.deleted = false ")
     Page<Product> findAll(Pageable pageable);
+
+    @Query("SELECT p FROM Product p WHERE"
+            + "(:categoryId IS NULL OR p.category.id = :categoryId) "
+            + "AND (:keyword IS NULL OR LOWER(p.name) LIKE CONCAT('%', LOWER(:keyword), '%')) "
+            + "AND (:brand IS NULL OR LOWER(p.brand) LIKE CONCAT('%', LOWER(:brand), '%')) "
+            + "AND (:color IS NULL OR LOWER(p.color) LIKE CONCAT('%', LOWER(:color), '%'))")
+    public Page<Product> filter(
+            @Param("categoryId") UUID categoryId,
+            @Param("keyword") String keyword,
+            @Param("brand") String brand,
+            @Param("color") String color,
+            Pageable pageable
+    );
+
+
 }

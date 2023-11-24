@@ -28,6 +28,14 @@ public class Product extends BaseModel{
     @Column(name = "price")
     private double price;
 
+    @JsonView(Views.Detail.class)
+    @Column(name = "summary")
+    private String summary;
+
+    @JsonView(Views.Detail.class)
+    @Column(name = "content", columnDefinition = "TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci")
+    private String content;
+
     @JsonView(Views.Public.class)
     @Column(name = "brand")
     private String brand;
@@ -52,6 +60,14 @@ public class Product extends BaseModel{
     @JsonView(Views.HaveCategoty.class)
     @Column(name = "deleted")
     private boolean deleted = false;
+
+    @JsonView(Views.Public.class)
+    @Column(name = "user_id")
+    private UUID userId;
+
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "user_id",referencedColumnName = "id", insertable = false, updatable = false)
+    private User user;
 
     @Override
     public String toString() {

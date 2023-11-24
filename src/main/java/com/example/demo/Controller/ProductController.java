@@ -52,7 +52,41 @@ public class ProductController {
         return Response.createResponse(HttpStatus.OK, "get products successfully", paginatedResponse);
     }
 
+    @JsonView(Views.Public.class)
+    @GetMapping("/products/getpage/filter")
+    public ResponseEntity<?> getPageFilter(
+            @RequestParam(required = false) UUID categoryId,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String brand,
+            @RequestParam(required = false) String color,
+            @RequestParam(defaultValue = "0") int pageIndex,
+            @RequestParam(defaultValue = "10") int pageSize
+    ) {
+        Page<Product> products;
+        products = productService.filter(categoryId, keyword, brand, color, pageIndex, pageSize);
+        PaginatedResponse<Product> paginatedResponse = new PaginatedResponse<>(
+                products.getContent(), products.getTotalElements(), products.getTotalPages()
+        );
+        return Response.createResponse(HttpStatus.OK, "get products successfully", paginatedResponse);
+    }
 
+    @JsonView(Views.Public.class)
+    @GetMapping("/products/page/user-selling")
+    public ResponseEntity<?> getPage(
+            @RequestParam UUID userId,
+            @RequestParam(defaultValue = "0") int pageIndex,
+            @RequestParam(defaultValue = "10") int pageSize
+    ) {
+        Page<Product> products;
+        products = productService.getByUserId(userId, pageIndex, pageSize);
+        PaginatedResponse<Product> paginatedResponse = new PaginatedResponse<>(
+                products.getContent(), products.getTotalElements(), products.getTotalPages()
+        );
+        return Response.createResponse(HttpStatus.OK, "get selling products of user successfully", paginatedResponse);
+    }
+
+
+    @JsonView(Views.Detail.class)
     @GetMapping("/product/{id}")
     public ResponseEntity<?> getById(@PathVariable UUID id) throws NoSuchElementException{
         try {
@@ -72,7 +106,7 @@ public class ProductController {
             return Response.createResponse(
                     HttpStatus.OK,
                     "insert product successfully",
-                    productService.insert(newProduct)
+                    productService.insertProduct(newProduct)
             );
         } catch (NoSuchElementException e) {
             return Response.createResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);

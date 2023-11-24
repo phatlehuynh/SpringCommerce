@@ -11,9 +11,11 @@ import java.util.UUID;
 public interface InterfaceProductService extends InterfaceBaseService<Product, ProductRepository>{
     public Product update(UUID productId, Product newProduct);
 
-    public Product insert(Product newProduct);
+    public String insertProduct(Product newProduct);
+    public Page<Product> filter(UUID categoryId, String keyword, String brand, String color, int pageIndex, int pageSize);
+        public Page<Product> getByCategoryId(UUID categoryId, int pageIndex, int pageSize);
+    public Page<Product> getByUserId(UUID userId, int pageIndex, int pageSize);
 
-    public Page<Product> getByCategoryId(UUID categoryId, int pageIndex, int pageSize);
 
     public Page<Product> search(String keyword, int pageIndex, int pageSize);
 
