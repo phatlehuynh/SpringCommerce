@@ -85,6 +85,21 @@
       </br>![image](https://github.com/phatlehuynh/SpringCommerce/assets/128290320/ba5ebcd6-980a-4c1c-8e5b-1eea67424720)
    3)  ***Get Cart By Id*** 
       </br>![image](https://github.com/phatlehuynh/SpringCommerce/assets/128290320/9cd26499-c9b1-4983-ab73-a64f6db5a24d)
+   4)  ***Insert Cart*** 
+      </br>![image](https://github.com/phatlehuynh/SpringCommerce/assets/128290320/160084bd-fcd3-47c5-88a7-3ce8c64aeb22)
+      </br>![image](https://github.com/phatlehuynh/SpringCommerce/assets/128290320/4ea450be-7197-4cd1-882e-e474abfdc6da)
+      </br>![image](https://github.com/phatlehuynh/SpringCommerce/assets/128290320/fa86ce0d-8506-4a6e-b4dc-aa035ddc51e2)
+   5)  ***Add Product To Cart*** 
+      </br>![image](https://github.com/phatlehuynh/SpringCommerce/assets/128290320/679d2439-6b41-4f5a-8ffa-e20eb7971c2a)
+   6)  ***Remove Product From Cart*** 
+      </br>![image](https://github.com/phatlehuynh/SpringCommerce/assets/128290320/89c374fb-42d8-45a1-b531-0e1ea1f2f17e)
+   7)  ***Delete Cart*** 
+      </br>![image](https://github.com/phatlehuynh/SpringCommerce/assets/128290320/527b7bd9-5a7f-44de-af2f-e9d7d549f2f0)
+      </br>![image](https://github.com/phatlehuynh/SpringCommerce/assets/128290320/24019c85-c3b9-4cfd-90fc-8a5bbeb76462)
+3) ***User***
+   1)  ***Get All User*** 
+      </br>![image](https://github.com/phatlehuynh/SpringCommerce/assets/128290320/9ad577b6-f5af-47f4-9cf5-e43ef0994a07)
+      </br>![image](https://github.com/phatlehuynh/SpringCommerce/assets/128290320/29a2ab9e-b07c-4899-b949-0a8daab9d056)
 
 
 
