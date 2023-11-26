@@ -96,10 +96,55 @@
    7)  ***Delete Cart*** 
       </br>![image](https://github.com/phatlehuynh/SpringCommerce/assets/128290320/527b7bd9-5a7f-44de-af2f-e9d7d549f2f0)
       </br>![image](https://github.com/phatlehuynh/SpringCommerce/assets/128290320/24019c85-c3b9-4cfd-90fc-8a5bbeb76462)
-3) ***User***
+4) ***User***
    1)  ***Get All User*** 
-      </br>![image](https://github.com/phatlehuynh/SpringCommerce/assets/128290320/9ad577b6-f5af-47f4-9cf5-e43ef0994a07)
-      </br>![image](https://github.com/phatlehuynh/SpringCommerce/assets/128290320/29a2ab9e-b07c-4899-b949-0a8daab9d056)
+      </br>![image](https://github.com/phatlehuynh/SpringCommerce/assets/128290320/716fd1c0-25da-418e-807f-951cf0f44cad)
+   2)  ***Get Page User*** 
+      </br>![image](https://github.com/phatlehuynh/SpringCommerce/assets/128290320/05eaaebd-86b9-489c-a1c8-363baaa0f5a4)
+   3)  ***Get User By Id*** 
+      </br>![image](https://github.com/phatlehuynh/SpringCommerce/assets/128290320/ca0379c1-00f3-4532-96f4-96188e7bf398)
+   4)  ***User Register*** 
+      </br>![image](https://github.com/phatlehuynh/SpringCommerce/assets/128290320/64c5f024-0e10-4c18-9379-2df17fad4552)
+   5)  ***User Login*** 
+      </br>![image](https://github.com/phatlehuynh/SpringCommerce/assets/128290320/ead4e8e9-94c3-4841-8e96-e90a98facf65)
+   6)  ***Add Product To Cart Of User*** 
+      </br>![image](https://github.com/phatlehuynh/SpringCommerce/assets/128290320/440919ab-963f-4d9c-97ae-7a0ee4651d17)
+   7)  ***Remove Product To Cart Of User*** 
+      </br>![image](https://github.com/phatlehuynh/SpringCommerce/assets/128290320/22e75197-014e-490f-91f7-795cbe3353c9)
+   8)  ***Update User*** 
+      </br>![image](https://github.com/phatlehuynh/SpringCommerce/assets/128290320/6417a41a-ac48-4689-b64b-fff1b45386ef)
+5) ***Order***
+   1)  ***Get All Order*** 
+      </br>![image](https://github.com/phatlehuynh/SpringCommerce/assets/128290320/16b5583b-cb88-43f2-9df1-4b571d6ef4e3)
+   2)  ***Get Page Order*** 
+      </br>![image](https://github.com/phatlehuynh/SpringCommerce/assets/128290320/6c381c93-090a-4ebc-b1fd-368fe022a9a0)
+   3)  ***Get Order By Id*** 
+      </br>![image](https://github.com/phatlehuynh/SpringCommerce/assets/128290320/8c99b574-2cb4-4495-b63a-3fceec840acf)
+   4)  ***Insert Order*** 
+      </br>![image](https://github.com/phatlehuynh/SpringCommerce/assets/128290320/83cd18ce-82a5-4640-b648-ff3d156e3739)
+   5)  ***Update Order Status*** 
+      </br>![image](https://github.com/phatlehuynh/SpringCommerce/assets/128290320/43bafdac-7fa7-4189-a977-1f91f412a1c3)
+5) ***File***
+   1)  ***Read Image*** 
+      </br>![image](https://github.com/phatlehuynh/SpringCommerce/assets/128290320/5f5402cc-7858-4786-8fbb-4d21dbb13634)
+   2)  ***Get All Uploads Image*** 
+      </br>![image](https://github.com/phatlehuynh/SpringCommerce/assets/128290320/8ec1b42c-7519-479b-8989-e491a09d2934)
+   3)  ***Upload Image*** 
+      </br>![image](https://github.com/phatlehuynh/SpringCommerce/assets/128290320/4f335dc9-be79-4ebb-9f15-7725e03cba6c)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
