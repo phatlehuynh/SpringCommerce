@@ -51,11 +51,28 @@ public class ProductService extends BaseService<Product, ProductRepository> impl
         if(productOptional.isPresent()){
             Product product = productOptional.get();
             newProduct.setId(productId);
-            Category category = newProduct.getCategory();
-            if(category == null){
+            UUID categoryId = newProduct.getCategoryId();
+            if(categoryId == null) {
                 Category oldCategory = product.getCategory();
                 if(oldCategory != null) {
-                    newProduct.setCategory(product.getCategory());
+                    newProduct.setCategoryId(product.getCategoryId());
+                }
+            } else {
+                Optional<Category> categoryOptional = categoryRepository.findById(categoryId);
+                if(categoryOptional.isEmpty()) {
+                    throw new NoSuchElementException("Category have id: " + categoryId + " is not exist");
+                }
+            }
+            UUID userId = newProduct.getUserId();
+            if(userId == null) {
+                User oldUser = product.getUser();
+                if(oldUser != null) {
+                    newProduct.setUserId(product.getUserId());
+                }
+            } else {
+                Optional<User> userOptional = userRepository.findById(userId);
+                if(userOptional.isEmpty()) {
+                    throw new NoSuchElementException("User have id: " + userId + " is not exist");
                 }
             }
             return repository.save(newProduct);

@@ -23,25 +23,23 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/api/login")
-                                .permitAll()
-                                .requestMatchers("/api/user/insert")
-                                .permitAll()
-                                .requestMatchers("/api/user/register")
-                                .permitAll()
-                                .requestMatchers("/api/products/**")
-//                                .hasRole("ADMIN")
-                                .permitAll()
-                                .requestMatchers("/api/products/insert")
-                                .hasRole("ADMIN")
-//                                .requestMatchers("/api/products/delete/**")
-//                                .hasRole("ADMIN")
-                                .requestMatchers("api/auth/**").permitAll()
 
-//                                .requestMatchers("api/users/**").permitAll()
-//                                .requestMatchers("api/users").permitAll()
+                                .requestMatchers("/api/product/insert",
+                                        "/api/product/update/**",
+                                        "/api/category/insert",
+                                        "/api/category/update/**",
+                                        "/api/category/delete/**",
+                                        "/api/cart/insert",
+                                        "/api/cart/update/**",
+                                        "/api/cart/delete/**",
+                                        "/api/user/insert",
+                                        "/api/user/delete/**",
+                                        "/api/product/delete/**"
+                                )
+                                .hasAuthority("ADMIN")
                                 .anyRequest()
-                                .authenticated()
+                                .permitAll()
+
                 )
                 .sessionManagement(sessionManagement ->
                         sessionManagement

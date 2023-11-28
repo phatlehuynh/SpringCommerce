@@ -3,6 +3,8 @@ package com.example.demo.Controller;
 import com.example.demo.Model.Order;
 import com.example.demo.Service.Implement.OrderService;
 import com.example.demo.Utilities.Response;
+import com.example.demo.Utilities.Views;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -17,11 +19,14 @@ import java.util.UUID;
 public class OrderController {
     @Autowired
     OrderService orderService;
+
+    @JsonView(Views.Public.class)
     @GetMapping("/orders")
     public ResponseEntity<?> getAll() {
         return Response.createResponse(HttpStatus.OK, "get all order successfully", orderService.getAll());
     }
 
+    @JsonView(Views.Public.class)
     @GetMapping("/orders/page")
     public ResponseEntity<?> getPage(
             @RequestParam(defaultValue = "0") int pageIndex,
@@ -41,7 +46,7 @@ public class OrderController {
         return Response.createResponse(HttpStatus.OK, "get page successfully", orderPage.getContent());
     }
 
-
+    @JsonView(Views.CartProduct.class)
     @GetMapping("/order/{id}")
     public ResponseEntity<?> getById(@PathVariable UUID id) {
         try {
@@ -52,6 +57,7 @@ public class OrderController {
         }
     }
 
+    @JsonView(Views.CartProduct.class)
     @PostMapping("/order/insert")
     public ResponseEntity<?> insert(
             @RequestBody Order order
@@ -80,6 +86,7 @@ public class OrderController {
 //        }
 //    }
 
+    @JsonView(Views.Public.class)
     @PutMapping("/order/updateStatus/{id}")
     public ResponseEntity<?> update(@PathVariable UUID id, @RequestParam byte newStatus) {
         try {

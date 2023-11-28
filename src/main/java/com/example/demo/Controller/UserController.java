@@ -6,6 +6,9 @@ import com.example.demo.Service.Implement.OrderService;
 import com.example.demo.Service.Implement.UserService;
 import com.example.demo.Utilities.RegisterRequest;
 import com.example.demo.Utilities.Response;
+import com.example.demo.Utilities.UpdateUserInfoRequest;
+import com.example.demo.Utilities.Views;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,11 +28,14 @@ public class UserController {
     OrderService orderService;
     @Autowired
     AuthenticationService authenticationService;
+
+    @JsonView(Views.Public.class)
     @GetMapping("/users")
     public ResponseEntity<?> getAll() {
         return Response.createResponse(HttpStatus.OK, "get all user successfully", userService.getAll());
     }
 
+    @JsonView(Views.Public.class)
     @GetMapping("/users/page")
     public ResponseEntity<?> getPage(
             @RequestParam(defaultValue = "0") int pageIndex,
@@ -39,7 +45,7 @@ public class UserController {
         return Response.createResponse(HttpStatus.OK, "get page successfully", userPage.getContent());
     }
 
-
+    @JsonView(Views.Public.class)
     @GetMapping("/user/{id}")
     public ResponseEntity<?> getById(@PathVariable UUID id) {
         try {
@@ -49,7 +55,6 @@ public class UserController {
             return Response.createResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
         }
     }
-
     @PutMapping("/users/addProductToCart")
     public ResponseEntity<?> addProductToCart(@RequestParam UUID userId, @RequestParam UUID productId, @RequestParam int quantity) {
         try {
@@ -111,8 +116,9 @@ public class UserController {
         }
     }
 
+    @JsonView(Views.Public.class)
     @PutMapping("/user/updateInfo/{id}")
-    public ResponseEntity<?> updateInfo(@PathVariable UUID id, @RequestBody User newUser) {
+    public ResponseEntity<?> updateInfo(@PathVariable UUID id, @RequestBody UpdateUserInfoRequest newUser) {
         try {
             return Response.createResponse(HttpStatus.OK, "update user successfully", userService.updateInfo(id, newUser));
         } catch (NoSuchElementException e) {

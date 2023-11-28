@@ -1,7 +1,9 @@
 package com.example.demo.Model;
 
+import com.example.demo.Utilities.Views;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.*;
 import lombok.*;
@@ -19,21 +21,27 @@ import java.util.*;
 @Data
 @Builder
 public class User extends BaseModel implements UserDetails {
+    @JsonView(Views.Public.class)
     @Column(name = "username", unique = true, nullable = false)
     private String username;
 
+    @JsonView(Views.Public.class)
     @Column(name = "nickname")
     private String nickname;
 
+    @JsonView(Views.Public.class)
     @Column(name = "phone")
     private String phone;
 
+    @JsonView(Views.Public.class)
     @Column(name = "email")
     private String email;
 
+    @JsonView(Views.Public.class)
     @Column(name = "password", nullable = false)
     private String password;
 
+    @JsonView(Views.Public.class)
     @Column(name = "cart_Id")
     private UUID cartId;
 
@@ -47,6 +55,7 @@ public class User extends BaseModel implements UserDetails {
     @EqualsAndHashCode.Exclude
     private Set<Order> orders;
 
+    @JsonView(Views.Public.class)
     @Enumerated(EnumType.STRING)
     private Role role;
 

@@ -27,7 +27,7 @@ public class CartController {
         return Response.createResponse(HttpStatus.OK, "get all cart successfully", cartService.getAll());
     }
 
-    @JsonView(Views.Public.class)
+    @JsonView(Views.CartProduct.class)
     @GetMapping("/carts/page")
     public ResponseEntity<?> getPage(
             @RequestParam(defaultValue = "0") int pageIndex,

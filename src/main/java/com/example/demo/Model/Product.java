@@ -52,7 +52,7 @@ public class Product extends BaseModel{
     private UUID categoryId;
 
     @JsonView(Views.HaveCategoty.class)
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "category_id",  referencedColumnName = "id", insertable = false, updatable = false)
     @JsonIgnoreProperties({"products", "parentId"})
     private Category category;

@@ -53,7 +53,7 @@ public class ProductController {
     }
 
     @JsonView(Views.Public.class)
-    @GetMapping("/products/getpage/filter")
+    @GetMapping("/products/page/filter")
     public ResponseEntity<?> getPageFilter(
             @RequestParam(required = false) UUID categoryId,
             @RequestParam(required = false) String keyword,
@@ -86,7 +86,7 @@ public class ProductController {
     }
 
 
-    @JsonView(Views.Detail.class)
+    @JsonView(Views.HaveCategoty.class)
     @GetMapping("/product/{id}")
     public ResponseEntity<?> getById(@PathVariable UUID id) throws NoSuchElementException{
         try {

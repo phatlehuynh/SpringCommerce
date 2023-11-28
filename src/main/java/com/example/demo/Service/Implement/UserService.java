@@ -8,6 +8,7 @@ import com.example.demo.Repository.CartRepository;
 import com.example.demo.Repository.ProductRepository;
 import com.example.demo.Repository.UserRepository;
 import com.example.demo.Service.InterfaceUserService;
+import com.example.demo.Utilities.UpdateUserInfoRequest;
 import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,18 +55,6 @@ public class UserService extends BaseService<User, UserRepository> implements In
     }
 
     @Override
-    public User updateInfo(UUID id, User newUser) {
-        Optional<User> userOptional = repository.findById(id);
-        if(userOptional.isPresent()) {
-            User user = userOptional.get();
-            newUser.setId(user.getId());
-            newUser.setCart(user.getCart());
-            return repository.save(newUser);
-        }
-        throw new NoSuchElementException("userId: " + id + "is not exist");
-    }
-
-    @Override
     public User insert(User newUser) throws NotImplementedException, NoSuchElementException {
         Optional<User> userOptional = repository.findByUsername(newUser.getUsername());
         if(userOptional.isPresent()) {
@@ -82,5 +71,38 @@ public class UserService extends BaseService<User, UserRepository> implements In
             }
         }
         return repository.save(newUser);
+    }
+
+    @Override
+    public User updateInfo(UUID userId, UpdateUserInfoRequest newUser) throws NotImplementedException, NoSuchElementException {
+        Optional<User> userOptional = repository.findById(userId);
+        if(userOptional.isEmpty()) {
+            throw new NoSuchElementException("User have id: " + userId + " is not exist");
+        }
+        User user = userOptional.get();
+        String nickname = newUser.getNickname();
+        String password = newUser.getPassword();
+        String phone = newUser.getPhone();
+        String email = newUser.getEmail();
+        if(isValidString(nickname)) {
+            user.setNickname(nickname);
+        }
+        if(isValidString(nickname)) {
+            user.setPassword(password);
+        }
+        if(isValidString(nickname)) {
+            user.setPhone(phone);
+        }
+        if(isValidString(nickname)) {
+            user.setEmail(email);
+        }
+        return repository.save(user);
+    }
+
+    private static boolean isValidString(String s) {
+        if(s == null) {
+            return false;
+        }
+        return !s.isEmpty();
     }
 }

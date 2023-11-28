@@ -74,6 +74,7 @@ public class CategoryController {
         }
     }
 
+    @JsonView(Views.Public.class)
     @PutMapping("/category/update/{id}")
     public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody Category newCategory) {
         try {
@@ -84,6 +85,7 @@ public class CategoryController {
         }
     }
 
+    @JsonView(Views.Public.class)
     @GetMapping("/category/getByParentId/{parentId}")
     public ResponseEntity<?> getByParentId(
             @PathVariable UUID parentId,

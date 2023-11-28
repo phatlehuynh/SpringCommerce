@@ -27,7 +27,7 @@ public class Cart extends BaseModel {
     @OneToMany(mappedBy = "cart", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, orphanRemoval = true)
     @JsonIgnoreProperties("cart")
     @EqualsAndHashCode.Exclude
-    @JsonView(Views.Public.class)
+    @JsonView(Views.CartProduct.class)
     private Set<CartProduct> cartProducts;
 
     public Cart() {
