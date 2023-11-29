@@ -124,6 +124,9 @@
       </br>![image](https://github.com/phatlehuynh/SpringCommerce/assets/128290320/83cd18ce-82a5-4640-b648-ff3d156e3739)
    5)  ***Update Order Status*** 
       </br>![image](https://github.com/phatlehuynh/SpringCommerce/assets/128290320/43bafdac-7fa7-4189-a977-1f91f412a1c3)
+   6)  ***Update Order By UserId*** 
+      </br>![image](https://github.com/phatlehuynh/SpringCommerce/assets/128290320/03f83eed-3029-483a-ac0f-fd2d85480b27)
+
 5) ***File***
    1)  ***Read Image*** 
       </br>![image](https://github.com/phatlehuynh/SpringCommerce/assets/128290320/5f5402cc-7858-4786-8fbb-4d21dbb13634)
