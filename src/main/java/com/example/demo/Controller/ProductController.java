@@ -59,11 +59,13 @@ public class ProductController {
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String brand,
             @RequestParam(required = false) String color,
+            @RequestParam(defaultValue = "-1") double minPrice,
+            @RequestParam(defaultValue = "999999999999") double maxPrice,
             @RequestParam(defaultValue = "0") int pageIndex,
             @RequestParam(defaultValue = "10") int pageSize
     ) {
         Page<Product> products;
-        products = productService.filter(categoryId, keyword, brand, color, pageIndex, pageSize);
+        products = productService.filter(categoryId, keyword, brand, color, minPrice, maxPrice, pageIndex, pageSize);
         PaginatedResponse<Product> paginatedResponse = new PaginatedResponse<>(
                 products.getContent(), products.getTotalElements(), products.getTotalPages()
         );
@@ -86,7 +88,7 @@ public class ProductController {
     }
 
 
-    @JsonView(Views.HaveCategoty.class)
+    @JsonView(Views.Detail.class)
     @GetMapping("/product/{id}")
     public ResponseEntity<?> getById(@PathVariable UUID id) throws NoSuchElementException{
         try {

@@ -36,7 +36,8 @@ public class OrderController {
         return Response.createResponse(HttpStatus.OK, "get page successfully", orderPage.getContent());
     }
 
-    @GetMapping("/orders/getByUserId/{id}")
+    @JsonView(Views.Public.class)
+    @GetMapping("/order/getByUserId")
     public ResponseEntity<?> getByUserId(
             @RequestParam UUID userId,
             @RequestParam(defaultValue = "0") int pageIndex,

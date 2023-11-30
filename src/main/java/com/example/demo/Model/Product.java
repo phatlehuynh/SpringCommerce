@@ -28,7 +28,7 @@ public class Product extends BaseModel{
     @Column(name = "price")
     private double price;
 
-    @JsonView(Views.Detail.class)
+    @JsonView(Views.Public.class)
     @Column(name = "summary")
     private String summary;
 

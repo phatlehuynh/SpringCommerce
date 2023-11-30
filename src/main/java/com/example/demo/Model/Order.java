@@ -22,7 +22,7 @@ public class Order extends BaseModel {
 
     @JsonView(Views.Public.class)
     @Column(name = "order_date")
-    private LocalDateTime orderDate;
+    private LocalDateTime orderDate = LocalDateTime.now();
 
     @JsonView(Views.Public.class)
     @Column(name = "address")

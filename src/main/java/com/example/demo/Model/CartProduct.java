@@ -32,7 +32,7 @@ public class CartProduct extends BaseModel{
 
     @ManyToOne
     @JoinColumn(name = "product_id")
-    @JsonIgnoreProperties({"linkImages", "category", "categoryId", "user", "userId"})
+    @JsonIgnoreProperties({ "category", "categoryId", "user", "userId"})
     @EqualsAndHashCode.Exclude
     @JsonView(Views.Public.class)
     private Product product;

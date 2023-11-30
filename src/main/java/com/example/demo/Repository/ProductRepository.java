@@ -24,12 +24,16 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
             + "(:categoryId IS NULL OR p.category.id = :categoryId) "
             + "AND (:keyword IS NULL OR LOWER(p.name) LIKE CONCAT('%', LOWER(:keyword), '%')) "
             + "AND (:brand IS NULL OR LOWER(p.brand) LIKE CONCAT('%', LOWER(:brand), '%')) "
-            + "AND (:color IS NULL OR LOWER(p.color) LIKE CONCAT('%', LOWER(:color), '%'))")
+            + "AND (:color IS NULL OR LOWER(p.color) LIKE CONCAT('%', LOWER(:color), '%'))"
+            + "AND (:minPrice IS NULL OR p.price >= :minPrice) "
+            + "AND (:maxPrice IS NULL OR p.price <= :maxPrice)")
     public Page<Product> filter(
             @Param("categoryId") UUID categoryId,
             @Param("keyword") String keyword,
             @Param("brand") String brand,
             @Param("color") String color,
+            @Param("minPrice") double minPrice,
+            @Param("maxPrice") double maxPrice,
             Pageable pageable
     );
 

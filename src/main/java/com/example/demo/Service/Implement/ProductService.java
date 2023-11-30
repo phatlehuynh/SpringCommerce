@@ -40,9 +40,9 @@ public class ProductService extends BaseService<Product, ProductRepository> impl
         return repository.search(keyword, pageable);
     }
 
-    public Page<Product> filter(UUID categoryId, String keyword, String brand, String color, int pageIndex, int pageSize) {
+    public Page<Product> filter(UUID categoryId, String keyword, String brand, String color, double minPrice, double maxPrice, int pageIndex, int pageSize) {
         Pageable pageable = PageRequest.of(pageIndex, pageSize);
-        return repository.filter(categoryId, keyword, brand, color, pageable);
+        return repository.filter(categoryId, keyword, brand, color, minPrice, maxPrice, pageable);
     }
 
     @Override
