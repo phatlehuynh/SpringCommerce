@@ -31,7 +31,9 @@
 
 **Full CURL commands or Postman snapshots to verify the APIs (include full request endpoints, HTTP Headers and request payload if any):**
  ***link postman: https://api.postman.com/collections/29046226-b49f147a-f7da-4016-923c-9a6d48ee9b3c?access_key=PMAT-01HGGAAWJAAKMP8YWTMRVYAMR9 ***
- 
+ </br> *** Cần có user có Role là ADMIN để sử dụng các chức năng của admin như thêm, xóa, sửa sản phẩm,... ***
+  ![image](https://github.com/phatlehuynh/SpringCommerce/assets/128290320/c685e6d8-e54e-468f-966d-8bdd5b4a99ad)
+
 - Các pageIndex và pageSize đều có giá trị mặc định nếu không truyền
 1) ***Product***
    1)  ***Get All Product*** 
