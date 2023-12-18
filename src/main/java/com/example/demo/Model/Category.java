@@ -30,7 +30,7 @@ public class Category extends BaseModel {
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     @EqualsAndHashCode.Exclude
 //    @JsonView(Views.Public.class)
-    @JsonIgnoreProperties({"categoryId", "category", "price", "brand", "color", "linkImages"})
+    @JsonIgnoreProperties({"categoryId", "category", "price", "brand", "color", "linkImages", "summary", "content", "userId", "user"})
     private Set<Product> products = new HashSet<>();
 
 }
