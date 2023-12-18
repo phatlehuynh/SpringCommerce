@@ -1,7 +1,9 @@
 package com.example.demo.Model;
 
+import com.example.demo.Utilities.Views;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.*;
 import lombok.*;
@@ -19,9 +21,11 @@ import java.util.*;
 @Data
 @Builder
 public class User extends BaseModel implements UserDetails {
+
     @Column(name = "username", unique = true, nullable = false)
     private String username;
 
+    @JsonView(Views.Detail.class)
     @Column(name = "nickname")
     private String nickname;
 
@@ -34,6 +38,7 @@ public class User extends BaseModel implements UserDetails {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @JsonView(Views.Public.class)
     @Column(name = "cart_Id")
     private UUID cartId;
 
@@ -47,6 +52,7 @@ public class User extends BaseModel implements UserDetails {
     @EqualsAndHashCode.Exclude
     private Set<Order> orders;
 
+    @JsonView(Views.Public.class)
     @Enumerated(EnumType.STRING)
     private Role role;
 

@@ -8,10 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Random;
 import java.util.UUID;
@@ -32,15 +29,20 @@ public class CartProduct extends BaseModel{
 
     @ManyToOne
     @JoinColumn(name = "product_id")
-    @JsonIgnoreProperties({"linkImages", "category", "categoryId"})
+    @JsonIgnoreProperties({"category", "categoryId"})
     @EqualsAndHashCode.Exclude
     @JsonView(Views.Public.class)
     private Product product;
 
+    @JoinColumn(name = "quantity")
     @JsonView(Views.Public.class)
     @EqualsAndHashCode.Exclude
     private int quantity;
 
+    @JsonView(Views.Public.class)
+    @JoinColumn(name = "selected")
+    @EqualsAndHashCode.Exclude
+    private boolean selected;
 
 
     @Override
@@ -50,5 +52,12 @@ public class CartProduct extends BaseModel{
                 "product=" + product +
                 ", quantity=" + quantity +
                 '}';
+    }
+
+    public CartProduct(Cart cart, Product product, int quantity) {
+        this.cart = cart;
+        this.product = product;
+        this.quantity = quantity;
+        this.selected = false;
     }
 }

@@ -13,9 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api")
@@ -42,6 +40,7 @@ public class CartController {
     }
 
 
+    @JsonView(Views.Public.class)
     @GetMapping("/cart/{id}")
     public ResponseEntity<?> getById(@PathVariable UUID id) {
         try {
@@ -52,17 +51,22 @@ public class CartController {
         }
     }
 
+    @GetMapping("/cart/getTotalAmount/{cartId}")
+    public ResponseEntity<?> getTotalAmount(@PathVariable UUID cartId) {
+        try {
+            return Response.createResponse(HttpStatus.OK, "get totalAmount successfully", cartService.getTotalAmount(cartId));
+        } catch (NoSuchElementException e) {
+            return Response.createResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
+        }
+    }
+
     @PostMapping("/cart/insert")
-    public ResponseEntity<?> insert(@RequestBody (required = false) Map<UUID, Integer> productIdAndQuantityList) throws NoSuchElementException{
-        if(productIdAndQuantityList == null) {
-            try {
-                return Response.createResponse(HttpStatus.OK, "insert cart successfully", cartService.insert());
-            } catch (NoSuchElementException e) {
-                return Response.createResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
-            }
+    public ResponseEntity<?> insert(@RequestBody (required = false) List<UUID> cartProductIdList) throws NoSuchElementException{
+        if(cartProductIdList == null) {
+            cartProductIdList = Collections.emptyList();
         }
         try {
-            return Response.createResponse(HttpStatus.OK, "insert cart successfully", cartService.insert(productIdAndQuantityList));
+            return Response.createResponse(HttpStatus.OK, "insert cart successfully", cartService.insert(cartProductIdList));
         } catch (NoSuchElementException e) {
             return Response.createResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
         }
@@ -75,9 +79,9 @@ public class CartController {
             if(!result) {
                 return Response.createResponse(HttpStatus.NOT_IMPLEMENTED, "quantity must > 0 for case add new product to cart", null);
             }
-            return Response.createResponse(HttpStatus.OK, "insert cart successfully", result);
+            return Response.createResponse(HttpStatus.OK, "insert cart successfully", true);
         } catch (NoSuchElementException e) {
-            return Response.createResponse(HttpStatus.NOT_IMPLEMENTED, e.getMessage(), null);
+            return Response.createResponse(HttpStatus.NOT_IMPLEMENTED, e.getMessage(), false);
         }
     }
 

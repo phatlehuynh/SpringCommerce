@@ -13,8 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 @Service
@@ -40,25 +42,44 @@ public class ProductService extends BaseService<Product, ProductRepository> impl
         return repository.search(keyword, pageable);
     }
 
-    public Page<Product> filter(UUID categoryId, String keyword, String brand, String color, int pageIndex, int pageSize) {
-        Pageable pageable = PageRequest.of(pageIndex, pageSize);
-        return repository.filter(categoryId, keyword, brand, color, pageable);
+    @Override
+    public Page<Product> filter(UUID categoryId, String keyword, String brand, String color, BigDecimal minPrice, BigDecimal maxPrice, int pageIndex, int pageSize, Sort sort) {
+        Pageable pageable = PageRequest.of(pageIndex, pageSize,sort);
+        return repository.filter(categoryId, keyword, brand, color, minPrice, maxPrice, pageable);
     }
 
     @Override
-    public Product update(UUID productId, Product newProduct) throws NoSuchElementException{
+    public boolean updateProduct(UUID productId, Product newProduct) throws NoSuchElementException{
         Optional<Product> productOptional = repository.findById(productId);
         if(productOptional.isPresent()){
             Product product = productOptional.get();
             newProduct.setId(productId);
-            Category category = newProduct.getCategory();
-            if(category == null){
+            UUID categoryId = newProduct.getCategoryId();
+            if(categoryId == null) {
                 Category oldCategory = product.getCategory();
                 if(oldCategory != null) {
-                    newProduct.setCategory(product.getCategory());
+                    newProduct.setCategoryId(product.getCategoryId());
+                }
+            } else {
+                Optional<Category> categoryOptional = categoryRepository.findById(categoryId);
+                if(categoryOptional.isEmpty()) {
+                    throw new NoSuchElementException("Category have id: " + categoryId + " is not exist");
                 }
             }
-            return repository.save(newProduct);
+            UUID userId = newProduct.getUserId();
+            if(userId == null) {
+                User oldUser = product.getUser();
+                if(oldUser != null) {
+                    newProduct.setUserId(product.getUserId());
+                }
+            } else {
+                Optional<User> userOptional = userRepository.findById(userId);
+                if(userOptional.isEmpty()) {
+                    throw new NoSuchElementException("User have id: " + userId + " is not exist");
+                }
+            }
+            repository.save(newProduct);
+            return true;
         } else {
             throw new NoSuchElementException("Can't find product with id: " + productId.toString());
         }
@@ -83,7 +104,7 @@ public class ProductService extends BaseService<Product, ProductRepository> impl
     }
 
     @Override
-    public void deleteById(UUID id) throws NoSuchElementException {
+    public boolean deleteProduct(UUID id) throws NoSuchElementException {
         Optional <Product> productOptional = repository.findById(id);
         if(productOptional.isPresent()) {
             Product product = productOptional.get();
@@ -94,6 +115,7 @@ public class ProductService extends BaseService<Product, ProductRepository> impl
             } else {
                 repository.deleteById(id);
             }
+            return true;
         } else {
             throw new NoSuchElementException("Can't found productId: " + id + " to delete");
         }
@@ -103,5 +125,11 @@ public class ProductService extends BaseService<Product, ProductRepository> impl
     public Page<Product> getPage(int pageIndex, int pageSize) {
         Pageable pageable = PageRequest.of(pageIndex, pageSize);
         return repository.findAll(pageable);
+    }
+
+    @Override
+    public Page<Product> getHighestSelled(int pageIndex, int pageSize) {
+        Pageable pageable = PageRequest.of(pageIndex, pageSize);
+        return repository.findHighestSelled(pageable);
     }
 }

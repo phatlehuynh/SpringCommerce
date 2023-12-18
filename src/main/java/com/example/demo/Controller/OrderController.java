@@ -1,6 +1,7 @@
 package com.example.demo.Controller;
 
 import com.example.demo.Model.Order;
+import com.example.demo.Model.OrderStatus;
 import com.example.demo.Service.Implement.OrderService;
 import com.example.demo.Utilities.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class OrderController {
         return Response.createResponse(HttpStatus.OK, "get page successfully", orderPage.getContent());
     }
 
-    @GetMapping("/orders/getByUserId/{id}")
+    @GetMapping("/orders/getByUserId")
     public ResponseEntity<?> getByUserId(
             @RequestParam UUID userId,
             @RequestParam(defaultValue = "0") int pageIndex,
@@ -60,7 +61,7 @@ public class OrderController {
             return Response.createResponse(
                     HttpStatus.OK,
                     "insert order successfully",
-                    orderService.insert(order)
+                    orderService.create(order)
             );
         } catch (NoSuchElementException e) {
             return Response.createResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
@@ -81,7 +82,7 @@ public class OrderController {
 //    }
 
     @PutMapping("/order/updateStatus/{id}")
-    public ResponseEntity<?> update(@PathVariable UUID id, @RequestParam byte newStatus) {
+    public ResponseEntity<?> update(@PathVariable UUID id, @RequestParam OrderStatus newStatus) {
         try {
             return Response.createResponse(HttpStatus.OK, "update order status successfully", orderService.updateStatus(id, newStatus));
         } catch (NoSuchElementException e) {

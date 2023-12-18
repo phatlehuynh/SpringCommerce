@@ -19,13 +19,14 @@ import java.util.UUID;
 public class Order extends BaseModel {
 
     @Column(name = "order_date")
-    private LocalDateTime orderDate;
+    private LocalDateTime orderDate = LocalDateTime.now();
 
     @Column(name = "address")
     private String address;
 
     @Column(name = "status")
-    private byte status;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
 
     @Column(name = "user_id")
     private UUID userId;

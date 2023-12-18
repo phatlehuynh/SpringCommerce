@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -22,23 +23,25 @@ import java.util.UUID;
 public class Cart extends BaseModel {
     @JsonView(Views.Public.class)
     @Column(name = "totalAmount")
-    private double totalAmount;
+    private BigDecimal totalAmount;
 
-    @OneToMany(mappedBy = "cart", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, orphanRemoval = true)
+    @OneToMany(mappedBy = "cart", cascade = {CascadeType.ALL}, orphanRemoval = true)
     @JsonIgnoreProperties("cart")
     @EqualsAndHashCode.Exclude
     @JsonView(Views.Public.class)
     private Set<CartProduct> cartProducts;
 
     public Cart() {
-        totalAmount = 0;
+        totalAmount = BigDecimal.ZERO;
         cartProducts = new HashSet<>();
     }
 
-    public double calcTotal() {
-        double total = 0.0;
+    public BigDecimal calcTotal() {
+        BigDecimal total = BigDecimal.ZERO;
         for(CartProduct cartProduct : cartProducts) {
-            total += cartProduct.getProduct().getPrice() * cartProduct.getQuantity();
+            if(cartProduct.isSelected()){
+                total = total.add(cartProduct.getProduct().getPrice().multiply(new BigDecimal(cartProduct.getQuantity())));
+            }
         }
         return total;
     }
@@ -50,7 +53,6 @@ public class Cart extends BaseModel {
             if(cartProduct.getQuantity() < 1) {
                 cartProducts.remove(cartProduct);
             }
-            totalAmount = calcTotal();
             return cartProduct;
         }
         return null;
@@ -76,12 +78,15 @@ public class Cart extends BaseModel {
 
     public void removeCartProduct(CartProduct cartProduct) {
         cartProducts.remove(cartProduct);
-        totalAmount = calcTotal();
     }
 
     public void addCartProduct(CartProduct cartProduct) {
         cartProducts.add(cartProduct);
-        totalAmount = calcTotal();
+    }
+
+    public BigDecimal getTotalAmount() {
+        this.totalAmount = calcTotal();
+        return this.totalAmount;
     }
 
     @Override

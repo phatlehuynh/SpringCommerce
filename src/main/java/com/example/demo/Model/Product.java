@@ -10,6 +10,7 @@ import jakarta.persistence.*;
 import org.apache.commons.lang3.builder.HashCodeExclude;
 import com.example.demo.Utilities.Views;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -26,10 +27,10 @@ public class Product extends BaseModel{
 
     @JsonView(Views.Public.class)
     @Column(name = "price")
-    private double price;
+    private BigDecimal price;
 
-    @JsonView(Views.Detail.class)
-    @Column(name = "summary")
+    @JsonView(Views.Public.class)
+    @Column(name = "summary", columnDefinition = "TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci")
     private String summary;
 
     @JsonView(Views.Detail.class)
@@ -48,11 +49,12 @@ public class Product extends BaseModel{
     @ElementCollection
     private List<String> linkImages = new ArrayList<String>();
 
+    @JsonView(Views.Detail.class)
     @Column(name = "category_id")
     private UUID categoryId;
 
     @JsonView(Views.HaveCategoty.class)
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "category_id",  referencedColumnName = "id", insertable = false, updatable = false)
     @JsonIgnoreProperties({"products", "parentId"})
     private Category category;
@@ -68,6 +70,9 @@ public class Product extends BaseModel{
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "user_id",referencedColumnName = "id", insertable = false, updatable = false)
     private User user;
+
+    @Column(name = "selled", columnDefinition = "int default 0")
+    private Integer selled = 0;
 
     @Override
     public String toString() {

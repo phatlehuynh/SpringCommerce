@@ -7,6 +7,8 @@ import com.example.demo.Service.Implement.AuthenticationService;
 import com.example.demo.Service.Implement.UserService;
 import com.example.demo.Utilities.AuthenticationRequest;
 import com.example.demo.Utilities.AuthenticationResponse;
+import com.example.demo.Utilities.Views;
+import com.fasterxml.jackson.annotation.JsonView;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,7 @@ public class AuthenticationCotroller {
 
 
 
+    @JsonView(Views.Public.class)
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthenticationRequest request) {
         try {

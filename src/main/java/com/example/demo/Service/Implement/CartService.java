@@ -7,6 +7,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 @Service
@@ -20,23 +21,26 @@ public class CartService extends BaseService<Cart, CartRepository> implements In
     @Autowired
     UserRepository userRepository;
 
-
     @Override
-    public Cart insert(Map<UUID, Integer> productIdAndQuantityList) {
+    public UUID insert(List<UUID> cartProductIdList) {
         Cart newCart = new Cart();
-        for(Map.Entry<UUID, Integer> entry : productIdAndQuantityList.entrySet()) {
-            Optional<Product> productOptional = productRepository.findById(entry.getKey());
-            if(productOptional.isPresent()){
-                CartProduct cartProduct = new CartProduct(newCart, productOptional.get(), entry.getValue());
+        Cart savedCart = repository.save(newCart);
+        for(UUID cartProductId : cartProductIdList) {
+            Optional<CartProduct> cartProductOptional = cartProductRepository.findById(cartProductId);
+            if(cartProductOptional.isPresent()){
+                CartProduct cartProduct = cartProductOptional.get();
                 newCart.addCartProduct(cartProduct);
+                cartProduct.setCart(savedCart);
+                cartProductRepository.save(cartProduct);
             }
             else {
-                throw new NoSuchElementException("Cannot found product have id: " + entry.getKey());
+                throw new NoSuchElementException("Cannot found cartProduct have id: " + cartProductId);
             }
         }
-        return repository.save(newCart);
+        return savedCart.getId();
     }
 
+    @Override
     public Cart insert() {
         Cart newCart = new Cart();
         return repository.save(newCart);
@@ -105,6 +109,16 @@ public class CartService extends BaseService<Cart, CartRepository> implements In
             repository.deleteById(id);
         } else {
             throw new NoSuchElementException("Can't found productId: " + id + " to delete");
+        }
+    }
+
+    @Override
+    public BigDecimal getTotalAmount(UUID cartId) {
+        Optional<Cart> cartOptional = repository.findById(cartId);
+        if (cartOptional.isPresent()) {
+            return cartOptional.get().getTotalAmount();
+        } else {
+            throw new NoSuchElementException("Cart have id: " + cartId + " is not exists");
         }
     }
 }

@@ -1,9 +1,6 @@
 package com.example.demo.Service.Implement;
 
-import com.example.demo.Model.Cart;
-import com.example.demo.Model.Order;
-import com.example.demo.Model.Product;
-import com.example.demo.Model.User;
+import com.example.demo.Model.*;
 import com.example.demo.Repository.CartRepository;
 import com.example.demo.Repository.OrderRepository;
 import com.example.demo.Repository.ProductRepository;
@@ -15,9 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class OrderService extends BaseService<Order, OrderRepository> implements InterfaceOrderService{
@@ -28,7 +23,7 @@ public class OrderService extends BaseService<Order, OrderRepository> implements
     @Autowired
     UserRepository userRepository;
     @Override
-    public Order insert(Order newOrder) throws NoSuchElementException {
+    public boolean create(Order newOrder) throws NoSuchElementException {
         if(newOrder.getUserId() != null){
             Optional<User> userOptional= userRepository.findById(newOrder.getUserId());
             if(userOptional.isPresent()) {
@@ -40,7 +35,14 @@ public class OrderService extends BaseService<Order, OrderRepository> implements
         if(newOrder.getCartId() != null) {
             Optional<Cart> cartOptional= cartRepository.findById(newOrder.getCartId());
             if(cartOptional.isPresent()) {
-                newOrder.setCart(cartOptional.get());
+                Cart cart = cartOptional.get();
+                newOrder.setCart(cart);
+                Set<CartProduct> cartProducts = cart.getCartProducts();
+                for(CartProduct cartProduct: cartProducts) {
+                    Product product = cartProduct.getProduct();
+                    product.setSelled(product.getSelled() + cartProduct.getQuantity());
+                    productRepository.save(product);
+                }
             } else {
                 throw new NoSuchElementException("Cart have id: " + newOrder.getCartId() + " is not exists");
             }
@@ -48,11 +50,12 @@ public class OrderService extends BaseService<Order, OrderRepository> implements
             throw new NoSuchElementException("Cart id cannot be null");
         }
 
-        return repository.save(newOrder);
+        repository.save(newOrder);
+        return true;
     }
 
     @Override
-    public Order updateStatus(UUID id, byte newStatus) throws NoSuchElementException {
+    public Order updateStatus(UUID id, OrderStatus newStatus) throws NoSuchElementException {
         Optional<Order> orderOptional = repository.findById(id);
         if(orderOptional.isPresent()) {
             Order order = orderOptional.get();
