@@ -29,6 +29,10 @@ public class Order extends BaseModel {
     private String address;
 
     @JsonView(Views.Public.class)
+    @Column(name = "contactPhoneNumber")
+    private String contactPhoneNumber;
+
+    @JsonView(Views.Public.class)
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private OrderStatus status;

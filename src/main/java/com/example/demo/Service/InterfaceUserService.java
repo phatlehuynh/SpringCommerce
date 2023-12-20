@@ -12,5 +12,5 @@ import java.util.UUID;
 
 public interface InterfaceUserService extends InterfaceBaseService<User, UserRepository>{
     public boolean addProduct(UUID userId, UUID productId, int quantity);
-    public User updateInfo(UUID id, UpdateUserInfoRequest newUser);
+    public boolean updateInfo(UUID id, UpdateUserInfoRequest newUser);
 }

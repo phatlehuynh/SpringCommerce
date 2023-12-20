@@ -45,7 +45,7 @@ public class UserController {
         return Response.createResponse(HttpStatus.OK, "get page successfully", userPage.getContent());
     }
 
-    @JsonView(Views.Public.class)
+    @JsonView(Views.Detail.class)
     @GetMapping("/user/{id}")
     public ResponseEntity<?> getById(@PathVariable UUID id) {
         try {
@@ -116,7 +116,7 @@ public class UserController {
         }
     }
 
-    @JsonView(Views.Public.class)
+    @JsonView(Views.Detail.class)
     @PutMapping("/user/updateInfo/{id}")
     public ResponseEntity<?> updateInfo(@PathVariable UUID id, @RequestBody UpdateUserInfoRequest newUser) {
         try {

@@ -22,16 +22,19 @@ import java.util.*;
 @Builder
 public class User extends BaseModel implements UserDetails {
 
+    @JsonView(Views.Public.class)
     @Column(name = "username", unique = true, nullable = false)
     private String username;
 
-    @JsonView(Views.Detail.class)
+    @JsonView(Views.Public.class)
     @Column(name = "nickname")
     private String nickname;
 
+    @JsonView(Views.Detail.class)
     @Column(name = "phone")
     private String phone;
 
+    @JsonView(Views.Detail.class)
     @Column(name = "email")
     private String email;
 
@@ -56,12 +59,20 @@ public class User extends BaseModel implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    private String verificationToken;
+
+    private boolean emailVerified;
+
+    @JsonView(Views.Detail.class)
+    private String linkImage;
+
     public void createCartAndOrder() {
         cart = new Cart();
         cartId = cart.getId();
         System.out.println(cart);
         orders = new HashSet<>();
     }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

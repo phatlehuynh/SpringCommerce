@@ -28,7 +28,7 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
             + "AND (:color IS NULL OR LOWER(p.color) LIKE CONCAT('%', LOWER(:color), '%'))"
             + "AND (:minPrice IS NULL OR p.price >= :minPrice) "
             + "AND (:maxPrice IS NULL OR p.price <= :maxPrice)"
-            + "AND p.deleted = false")
+            + "AND p.deleted = :deleted")
     public Page<Product> filter(
             @Param("categoryId") UUID categoryId,
             @Param("keyword") String keyword,
@@ -36,6 +36,7 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
             @Param("color") String color,
             @Param("minPrice") BigDecimal minPrice,
             @Param("maxPrice") BigDecimal maxPrice,
+            @Param("deleted") boolean deleted,
             Pageable pageable
     );
 

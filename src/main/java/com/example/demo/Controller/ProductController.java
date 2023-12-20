@@ -88,6 +88,7 @@ public class ProductController {
             @RequestParam(required = false) String color,
             @RequestParam(defaultValue = "-1") BigDecimal minPrice,
             @RequestParam(defaultValue = "999999999999") BigDecimal maxPrice,
+            @RequestParam(defaultValue = "false") boolean deleted,
             @RequestParam(defaultValue = "0") int pageIndex,
             @RequestParam(defaultValue = "10") int pageSize,
             @RequestParam(required = false) String sortField
@@ -95,7 +96,7 @@ public class ProductController {
         Sort sort = createSortObject(sortField);
 
         Page<Product> products;
-        products = productService.filter(categoryId, keyword, brand, color, minPrice, maxPrice, pageIndex, pageSize, sort);
+        products = productService.filter(categoryId, keyword, brand, color, minPrice, maxPrice, deleted, pageIndex, pageSize, sort);
         PaginatedResponse<Product> paginatedResponse = new PaginatedResponse<>(
                 products.getContent(), products.getTotalElements(), products.getTotalPages()
         );
@@ -148,13 +149,24 @@ public class ProductController {
     @DeleteMapping("/product/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable UUID id) throws NoSuchElementException {
         try {
-            productService.deleteById(id);
+            productService.deleteProduct(id);
         } catch (NoSuchElementException e) {
-            return Response.createResponse(HttpStatus.OK, e.getMessage(), null);
+            return Response.createResponse(HttpStatus.NOT_IMPLEMENTED, e.getMessage(), null);
         }
         return Response.createResponse(HttpStatus.OK,
                 "deleted product have id: " + id.toString(),
                 true);
+
+    }
+
+    @PutMapping("/product/enableSelling/{id}")
+    public ResponseEntity<?> enableSelling(@PathVariable UUID id) throws NoSuchElementException {
+        try {
+            return Response.createResponse(HttpStatus.OK, "enable product have id: " + id.toString(),
+                    productService.enableSelling(id));
+        } catch (NoSuchElementException e) {
+            return Response.createResponse(HttpStatus.NOT_IMPLEMENTED, e.getMessage(), null);
+        }
 
     }
 

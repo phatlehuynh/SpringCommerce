@@ -36,9 +36,9 @@ public class SecurityConfiguration {
                                         "/api/cart/update/**",
                                         "/api/cart/delete/**",
                                         "/api/user/insert",
-                                        "/api/user/delete/**",
+                                        "/api/user/delete/**"
 //                                        "/api/product/delete/**",
-                                        "/api/orders/page/**"
+//                                        "/api/orders/page/**"
                                 )
                                 .hasAuthority("ADMIN")
                                 .anyRequest()

@@ -14,6 +14,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
@@ -24,6 +26,10 @@ public class AuthenticationService {
     private  final AuthenticationManager authenticationManager;
     @Autowired
     UserService userService;
+    @Autowired
+    JavaMailService javaMailService;
+    @Autowired
+    UserRepository userRepository;
 
     public AuthenticationResponse register(RegisterRequest request) {
         var newUser = User.builder().
@@ -34,8 +40,18 @@ public class AuthenticationService {
                 .nickname(request.getNickname())
                 .role(Role.USER)
                 .build();
+
         User user = userService.insert(newUser);
+        String token = UUID.randomUUID().toString();
         var jwtToken = jwtService.generateToken(user);
+
+        user.setVerificationToken(token);
+        javaMailService.sendMail(
+                user.getEmail(),
+                "Verify your email",
+                "Click here to verify: http://localhost:8080/api/verify?token="+token
+        );
+        userRepository.save(user);
         return AuthenticationResponse.builder().token(jwtToken).user(user).build();
     }
     public AuthenticationResponse authenticate(AuthenticationRequest request) {

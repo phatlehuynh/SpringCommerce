@@ -2,7 +2,9 @@ package com.example.demo.Controller;
 
 import com.example.demo.Model.Order;
 import com.example.demo.Model.OrderStatus;
+import com.example.demo.Model.Product;
 import com.example.demo.Service.Implement.OrderService;
+import com.example.demo.Utilities.PaginatedResponse;
 import com.example.demo.Utilities.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,8 +30,13 @@ public class OrderController {
             @RequestParam(defaultValue = "0") int pageIndex,
             @RequestParam(defaultValue = "10") int pageSize
     ) {
+
         Page<Order> orderPage = orderService.getPage(pageIndex, pageSize);
-        return Response.createResponse(HttpStatus.OK, "get page successfully", orderPage.getContent());
+        PaginatedResponse<Order> paginatedResponse = new PaginatedResponse<>(
+                orderPage.getContent(), orderPage.getTotalElements(), orderPage.getTotalPages()
+        );
+
+        return Response.createResponse(HttpStatus.OK, "get page successfully", paginatedResponse);
     }
 
     @GetMapping("/orders/getByUserId")
@@ -39,7 +46,10 @@ public class OrderController {
             @RequestParam(defaultValue = "10") int pageSize
     ) {
         Page<Order> orderPage = orderService.getByUserId(userId, pageIndex, pageSize);
-        return Response.createResponse(HttpStatus.OK, "get page successfully", orderPage.getContent());
+        PaginatedResponse<Order> paginatedResponse = new PaginatedResponse<>(
+                orderPage.getContent(), orderPage.getTotalElements(), orderPage.getTotalPages()
+        );
+        return Response.createResponse(HttpStatus.OK, "get page successfully", paginatedResponse);
     }
 
 

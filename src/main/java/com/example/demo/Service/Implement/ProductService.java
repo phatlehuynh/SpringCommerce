@@ -43,9 +43,9 @@ public class ProductService extends BaseService<Product, ProductRepository> impl
     }
 
     @Override
-    public Page<Product> filter(UUID categoryId, String keyword, String brand, String color, BigDecimal minPrice, BigDecimal maxPrice, int pageIndex, int pageSize, Sort sort) {
+    public Page<Product> filter(UUID categoryId, String keyword, String brand, String color, BigDecimal minPrice, BigDecimal maxPrice, boolean deleted, int pageIndex, int pageSize, Sort sort) {
         Pageable pageable = PageRequest.of(pageIndex, pageSize,sort);
-        return repository.filter(categoryId, keyword, brand, color, minPrice, maxPrice, pageable);
+        return repository.filter(categoryId, keyword, brand, color, minPrice, maxPrice, deleted, pageable);
     }
 
     @Override
@@ -108,8 +108,8 @@ public class ProductService extends BaseService<Product, ProductRepository> impl
         Optional <Product> productOptional = repository.findById(id);
         if(productOptional.isPresent()) {
             Product product = productOptional.get();
-            Optional<CartProduct> cartProductOptional = cartProductRepository.findByProductId(id);
-            if(cartProductOptional.isPresent()) {
+            boolean isInCart = cartProductRepository.existsByProductId(id);
+            if(isInCart) {
                 product.setDeleted(true);
                 repository.save(product);
             } else {
@@ -132,4 +132,18 @@ public class ProductService extends BaseService<Product, ProductRepository> impl
         Pageable pageable = PageRequest.of(pageIndex, pageSize);
         return repository.findHighestSelled(pageable);
     }
+
+    @Override
+    public boolean enableSelling(UUID id) throws NoSuchElementException {
+        Optional <Product> productOptional = repository.findById(id);
+        if(productOptional.isPresent()) {
+            Product product = productOptional.get();
+                product.setDeleted(!product.isDeleted());
+                repository.save(product);
+                return product.isDeleted();
+        } else {
+            throw new NoSuchElementException("Can't found productId: " + id + " to delete");
+        }
+    }
+
 }

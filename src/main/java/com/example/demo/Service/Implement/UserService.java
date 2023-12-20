@@ -74,7 +74,7 @@ public class UserService extends BaseService<User, UserRepository> implements In
     }
 
     @Override
-    public User updateInfo(UUID userId, UpdateUserInfoRequest newUser) throws NotImplementedException, NoSuchElementException {
+    public boolean updateInfo(UUID userId, UpdateUserInfoRequest newUser) throws NotImplementedException, NoSuchElementException {
         Optional<User> userOptional = repository.findById(userId);
         if(userOptional.isEmpty()) {
             throw new NoSuchElementException("User have id: " + userId + " is not exist");
@@ -84,19 +84,24 @@ public class UserService extends BaseService<User, UserRepository> implements In
         String password = newUser.getPassword();
         String phone = newUser.getPhone();
         String email = newUser.getEmail();
+        String linkImage = newUser.getLinkImage();
         if(isValidString(nickname)) {
             user.setNickname(nickname);
         }
-        if(isValidString(nickname)) {
+        if(isValidString(password)) {
             user.setPassword(password);
         }
-        if(isValidString(nickname)) {
+        if(isValidString(phone)) {
             user.setPhone(phone);
         }
-        if(isValidString(nickname)) {
+        if(isValidString(email)) {
             user.setEmail(email);
         }
-        return repository.save(user);
+        if(isValidString(linkImage)) {
+            user.setLinkImage(linkImage);
+        }
+        repository.save(user);
+        return true;
     }
 
     private static boolean isValidString(String s) {

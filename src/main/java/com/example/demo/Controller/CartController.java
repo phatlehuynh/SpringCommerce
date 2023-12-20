@@ -40,7 +40,7 @@ public class CartController {
     }
 
 
-    @JsonView(Views.Public.class)
+    @JsonView(Views.CartProduct.class)
     @GetMapping("/cart/{id}")
     public ResponseEntity<?> getById(@PathVariable UUID id) {
         try {

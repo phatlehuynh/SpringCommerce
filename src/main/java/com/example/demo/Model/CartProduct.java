@@ -4,10 +4,7 @@ import com.example.demo.Utilities.Views;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Random;
@@ -27,8 +24,11 @@ public class CartProduct extends BaseModel{
     @EqualsAndHashCode.Exclude
     private Cart cart;
 
+    @Column(name = "product_id")
+    private UUID productId;
+
     @ManyToOne
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id",  referencedColumnName = "id", insertable = false, updatable = false)
     @JsonIgnoreProperties({"category", "categoryId"})
     @EqualsAndHashCode.Exclude
     @JsonView(Views.Public.class)

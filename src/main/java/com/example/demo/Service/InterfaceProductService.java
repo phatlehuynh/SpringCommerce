@@ -16,10 +16,10 @@ public interface InterfaceProductService extends InterfaceBaseService<Product, P
     public boolean deleteProduct(UUID id);
 
     public String insertProduct(Product newProduct);
-    public Page<Product> filter(UUID categoryId, String keyword, String brand, String color, BigDecimal minPrice, BigDecimal maxPrice, int pageIndex, int pageSize, Sort sort);
+    public Page<Product> filter(UUID categoryId, String keyword, String brand, String color, BigDecimal minPrice, BigDecimal maxPrice, boolean deleted, int pageIndex, int pageSize, Sort sort);
     public Page<Product> getByCategoryId(UUID categoryId, int pageIndex, int pageSize);
     public Page<Product> getByUserId(UUID userId, int pageIndex, int pageSize);
     public Page<Product> getHighestSelled(int pageIndex, int pageSize);
     public Page<Product> search(String keyword, int pageIndex, int pageSize);
-
+    public boolean enableSelling(UUID id);
 }
