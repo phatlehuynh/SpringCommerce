@@ -60,4 +60,11 @@ public class CartProduct extends BaseModel{
         this.quantity = quantity;
         this.selected = false;
     }
+
+    public CartProduct(Cart cart, UUID productId, int quantity) {
+        this.cart = cart;
+        this.productId = productId;
+        this.quantity = quantity;
+        this.selected = false;
+    }
 }

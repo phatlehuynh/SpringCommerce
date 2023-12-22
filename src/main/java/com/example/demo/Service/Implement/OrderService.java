@@ -55,12 +55,13 @@ public class OrderService extends BaseService<Order, OrderRepository> implements
     }
 
     @Override
-    public Order updateStatus(UUID id, OrderStatus newStatus) throws NoSuchElementException {
+    public boolean updateStatus(UUID id, OrderStatus newStatus) throws NoSuchElementException {
         Optional<Order> orderOptional = repository.findById(id);
         if(orderOptional.isPresent()) {
             Order order = orderOptional.get();
             order.setStatus(newStatus);
-            return repository.save(order);
+            repository.save(order);
+            return true;
         } else {
             throw new NoSuchElementException("Order id: " + id + "is not exist");
         }
@@ -70,5 +71,11 @@ public class OrderService extends BaseService<Order, OrderRepository> implements
     public Page<Order> getByUserId(UUID userId, int pageIndex, int pageSize) {
         Pageable pageable = PageRequest.of(pageIndex, pageSize);
         return repository.findByUserId(userId, pageable);
+    }
+
+    @Override
+    public Page<Order> getPageOrder(OrderStatus orderStatus, int pageIndex, int pageSize) {
+        Pageable pageable = PageRequest.of(pageIndex, pageSize);
+        return repository.findByStatus(orderStatus, pageable);
     }
 }

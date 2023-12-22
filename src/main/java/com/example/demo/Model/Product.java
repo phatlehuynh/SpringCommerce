@@ -59,7 +59,7 @@ public class Product extends BaseModel{
     @JsonIgnoreProperties({"products", "parentId"})
     private Category category;
 
-    @JsonView(Views.HaveCategoty.class)
+    @JsonView(Views.Detail.class)
     @Column(name = "deleted")
     private boolean deleted = false;
 

@@ -27,11 +27,12 @@ public class OrderController {
 
     @GetMapping("/orders/page")
     public ResponseEntity<?> getPage(
+            @RequestParam OrderStatus orderStatus,
             @RequestParam(defaultValue = "0") int pageIndex,
             @RequestParam(defaultValue = "10") int pageSize
     ) {
 
-        Page<Order> orderPage = orderService.getPage(pageIndex, pageSize);
+        Page<Order> orderPage = orderService.getPageOrder(orderStatus, pageIndex, pageSize);
         PaginatedResponse<Order> paginatedResponse = new PaginatedResponse<>(
                 orderPage.getContent(), orderPage.getTotalElements(), orderPage.getTotalPages()
         );

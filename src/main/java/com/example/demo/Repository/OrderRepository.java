@@ -1,6 +1,7 @@
 package com.example.demo.Repository;
 
 import com.example.demo.Model.Order;
+import com.example.demo.Model.OrderStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,4 +14,6 @@ import java.util.UUID;
 public interface OrderRepository extends JpaRepository<Order, UUID> {
     public Optional<Order> findByCartId(UUID cartId);
     public Page<Order> findByUserId(UUID userId, Pageable pageable);
+    public Page<Order> findByStatus(OrderStatus orderStatus, Pageable pageable);
+
 }

@@ -9,6 +9,7 @@ import java.util.UUID;
 
 public interface InterfaceOrderService {
     public boolean create(Order newOrder);
-    public Order updateStatus(UUID id, OrderStatus newStatus);
+    public boolean updateStatus(UUID id, OrderStatus newStatus);
     public Page<Order> getByUserId(UUID userId, int pageIndex, int pageSize);
-    }
+    public Page<Order> getPageOrder(OrderStatus orderStatus, int pageIndex, int pageSize);
+}

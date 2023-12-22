@@ -58,7 +58,7 @@ public class CartService extends BaseService<Cart, CartRepository> implements In
                     if(quantity < 1) {
                         return false;
                     }
-                    CartProduct newCartProduct = new CartProduct(cartOptional.get(), product, quantity);
+                    CartProduct newCartProduct = new CartProduct(cartOptional.get(), productId, quantity);
                     cart.addCartProduct(newCartProduct);
                 }
                 else {
