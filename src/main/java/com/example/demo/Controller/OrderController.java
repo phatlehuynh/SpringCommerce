@@ -43,10 +43,11 @@ public class OrderController {
     @GetMapping("/orders/getByUserId")
     public ResponseEntity<?> getByUserId(
             @RequestParam UUID userId,
+            @RequestParam OrderStatus orderStatus,
             @RequestParam(defaultValue = "0") int pageIndex,
             @RequestParam(defaultValue = "10") int pageSize
     ) {
-        Page<Order> orderPage = orderService.getByUserId(userId, pageIndex, pageSize);
+        Page<Order> orderPage = orderService.getByUserId(orderStatus, userId, pageIndex, pageSize);
         PaginatedResponse<Order> paginatedResponse = new PaginatedResponse<>(
                 orderPage.getContent(), orderPage.getTotalElements(), orderPage.getTotalPages()
         );

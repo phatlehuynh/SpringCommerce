@@ -13,7 +13,7 @@ import java.util.UUID;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, UUID> {
     public Optional<Order> findByCartId(UUID cartId);
-    public Page<Order> findByUserId(UUID userId, Pageable pageable);
+    public Page<Order> findByUserIdAndStatus(UUID userId, OrderStatus orderStatus, Pageable pageable);
     public Page<Order> findByStatus(OrderStatus orderStatus, Pageable pageable);
 
 }

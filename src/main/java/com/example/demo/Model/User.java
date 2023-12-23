@@ -11,6 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 @EqualsAndHashCode(callSuper = true)
@@ -66,6 +67,9 @@ public class User extends BaseModel implements UserDetails {
     @JsonView(Views.Detail.class)
     private String linkImage;
 
+    @JsonView({Views.Public.class})
+    private BigDecimal coin = BigDecimal.ZERO;
+
     public void createCartAndOrder() {
         cart = new Cart();
         cartId = cart.getId();
@@ -97,4 +101,17 @@ public class User extends BaseModel implements UserDetails {
     @Override
     public boolean isEnabled() { return true; }
 
+    public void addCoin(BigDecimal newCoin) {
+        this.coin = this.coin.add(newCoin);
+        System.out.println("---------------------------------- coin: " + coin);
+        System.out.println("---------------------------------- newcoin: " + newCoin);
+
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "coin=" + coin +
+                '}';
+    }
 }

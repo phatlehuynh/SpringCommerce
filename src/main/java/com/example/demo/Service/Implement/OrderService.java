@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 @Service
@@ -61,6 +62,22 @@ public class OrderService extends BaseService<Order, OrderRepository> implements
             Order order = orderOptional.get();
             order.setStatus(newStatus);
             repository.save(order);
+            if(order.getStatus() == OrderStatus.COMPLETED) {
+                Set<CartProduct> cartProducts = order.getCart().getCartProducts();
+                for(CartProduct cartProduct : cartProducts) {
+                    User user = cartProduct.getProduct().getUser();
+                    if(user != null) {
+                        user.addCoin(cartProduct.getProduct().getPrice().multiply(new BigDecimal(cartProduct.getQuantity())));
+                        userRepository.save(user);
+                    }
+                }
+            }
+            if(order.getStatus() == OrderStatus.CANCELED) {
+                User user = order.getUser();
+                user.addCoin(order.getCart().getTotalAmount());
+                System.out.println(user);
+                userRepository.save(user);
+            }
             return true;
         } else {
             throw new NoSuchElementException("Order id: " + id + "is not exist");
@@ -68,9 +85,9 @@ public class OrderService extends BaseService<Order, OrderRepository> implements
     }
 
     @Override
-    public Page<Order> getByUserId(UUID userId, int pageIndex, int pageSize) {
+    public Page<Order> getByUserId(OrderStatus orderStatus, UUID userId, int pageIndex, int pageSize) {
         Pageable pageable = PageRequest.of(pageIndex, pageSize);
-        return repository.findByUserId(userId, pageable);
+        return repository.findByUserIdAndStatus(userId, orderStatus, pageable);
     }
 
     @Override

@@ -14,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Service
@@ -39,6 +40,7 @@ public class AuthenticationService {
                 .phone(request.getPhone())
                 .nickname(request.getNickname())
                 .role(Role.USER)
+                .coin(BigDecimal.ZERO)
                 .build();
 
         User user = userService.insert(newUser);
