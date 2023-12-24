@@ -69,6 +69,7 @@ public class Product extends BaseModel{
 
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "user_id",referencedColumnName = "id", insertable = false, updatable = false)
+    @JsonIgnoreProperties({"orders"})
     private User user;
 
     @Column(name = "selled", columnDefinition = "int default 0")

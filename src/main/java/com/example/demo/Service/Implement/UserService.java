@@ -11,6 +11,7 @@ import com.example.demo.Service.InterfaceUserService;
 import com.example.demo.Utilities.UpdateUserInfoRequest;
 import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -26,6 +27,8 @@ public class UserService extends BaseService<User, UserRepository> implements In
     CartService cartService;
     @Autowired
     CartRepository cartRepository;
+    @Autowired
+    PasswordEncoder passwordEncoder;
     @Override
     public boolean addProduct(UUID userId, UUID productId, int quantity) throws NoSuchElementException {
         Optional<User> userOptional = repository.findById(userId);
@@ -89,7 +92,7 @@ public class UserService extends BaseService<User, UserRepository> implements In
             user.setNickname(nickname);
         }
         if(isValidString(password)) {
-            user.setPassword(password);
+            user.setPassword(passwordEncoder.encode(password));
         }
         if(isValidString(phone)) {
             user.setPhone(phone);
@@ -103,6 +106,8 @@ public class UserService extends BaseService<User, UserRepository> implements In
         repository.save(user);
         return true;
     }
+
+
 
     private static boolean isValidString(String s) {
         if(s == null) {

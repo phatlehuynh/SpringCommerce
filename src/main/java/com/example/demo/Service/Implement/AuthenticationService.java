@@ -8,6 +8,7 @@ import com.example.demo.Repository.UserRepository;
 import com.example.demo.Security.JwtService;
 import com.example.demo.Utilities.RegisterRequest;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -55,6 +57,26 @@ public class AuthenticationService {
         );
         userRepository.save(user);
         return AuthenticationResponse.builder().token(jwtToken).user(user).build();
+    }
+
+    public Boolean forgotPassword(String email) {
+        Optional<User> userOptional = userRepository.findTopByEmail(email);
+        if(userOptional.isPresent()) {
+            User user = userOptional.get();
+            UUID id = UUID.randomUUID();
+            user.setPassword(passwordEncoder.encode(id.toString()));
+            userRepository.save(user);
+            javaMailService.sendMail(
+                    email,
+                    "Forgot Password",
+                    "Dear " + user.getUsername() + "Your new password is: " + id.toString()
+            );
+            System.out.println(user);
+
+            return true;
+        } else {
+            throw new NotImplementedException("Cannot found user have email: " + email);
+        }
     }
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(

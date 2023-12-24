@@ -103,6 +103,15 @@ public class UserController {
         }
     }
 
+    @PostMapping("/user/forgotPassword")
+    public ResponseEntity<?> forgotPassword(@RequestParam String email) throws NotImplementedException, NoSuchElementException {
+        try {
+            return Response.createResponse(HttpStatus.OK, "insert user successfully", authenticationService.forgotPassword(email));
+        } catch (Exception e) {
+            return Response.createResponse(HttpStatus.NOT_IMPLEMENTED, e.getMessage(), null);
+        }
+    }
+
     @DeleteMapping("/user/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable UUID id) throws NoSuchElementException {
         try {

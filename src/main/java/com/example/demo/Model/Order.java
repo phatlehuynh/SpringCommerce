@@ -1,13 +1,13 @@
 package com.example.demo.Model;
 
 import com.example.demo.Utilities.Views;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -20,6 +20,8 @@ import java.util.UUID;
 @Data
 public class Order extends BaseModel {
 
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+    @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     @JsonView(Views.Public.class)
     @Column(name = "order_date")
     private LocalDateTime orderDate = LocalDateTime.now();
@@ -52,5 +54,6 @@ public class Order extends BaseModel {
     @JsonView(Views.Public.class)
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "cart_id", insertable = false, updatable = false)
+    @JsonIgnoreProperties({"cartProducts.product"})
     private Cart cart;
 }

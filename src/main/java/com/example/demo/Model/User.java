@@ -111,6 +111,7 @@ public class User extends BaseModel implements UserDetails {
     @Override
     public String toString() {
         return "User{" +
+                "username=" + username +
                 "coin=" + coin +
                 '}';
     }
